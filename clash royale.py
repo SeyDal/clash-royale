@@ -10,3 +10,8 @@ class hero :
         self.type=hero_type
         self.target=target
 
+class wizard(hero):
+    def __init__(self,position):
+        hero.__init__(self,228,598,1.4,5.5,True,4,"ground",("air","ground","building"))
+        self.position = position
+        
