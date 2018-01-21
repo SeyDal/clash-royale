@@ -12,23 +12,27 @@ class Hero :
 #heros infornarions
 class Wizard(Hero):
     def __init__(self,position):
-        Heroero.__init__(self,228,598,1.4,5.5,True,4,"ground",("air","ground","building"))
+        Hero.__init__(self,228,598,1.4,5.5,True,4,"ground",("air","ground","building"))
         self.position = position
+
 
 class Ballon(Hero):
     def __init__(self,position):
         Hero.__init__(self,798,1396,3,1,False,5,"air",("building"))
         self.position=position
 
+
 class Pekka(Hero):
     def __init__(self,position):
         Hero.__init__(self,598,1059,1.8,1,False,4,"ground",("ground","building"))
         self.position=position
 
+
 class Archer(Hero):
     def __init__(self,position):
         Hero.__init__(self,86,254,1.2,2,True,2,"ground",("air","ground","building"))
         self.position=position
+
 
 class Power :
     def __init__(self):
@@ -36,4 +40,21 @@ class Power :
         self.duration=7.5
         self.boost=35
         self.hero_cost=3
-        
+
+
+class Giant(Hero):
+    def __init__(self, position):
+        hero.__init__(self, 211, 3344, 1.5, 1 , False, 5, "ground", ("building"))
+        self.position = position
+
+
+class Barbar(Hero):
+    def __init__(self, position):
+        hero.__init__(self, 155, 636, 1.5, 1, False, 2, "ground", ("ground", "building"))
+        self.position = position
+
+
+class Megaminion(Hero):
+    def __init__(self, position):
+        hero.__init__(self, 258, 695, 1.5, 2, True, 3, "air", ("air","ground", "building"))
+        self.position = position
