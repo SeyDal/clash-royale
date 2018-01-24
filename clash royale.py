@@ -15,7 +15,7 @@ class Hero :
 
 class Wizard(Hero):
     def __init__(self,position,id):
-        Hero.__init__(self,228,598,1.4,5.5,True,4,"ground",("air","ground","building"))
+        Hero.__init__(self,228,598,1.4,5.5,True,5,"ground",("air","ground","building"))
         self.position = position
         self.id=id
 
@@ -26,7 +26,7 @@ class Wizard(Hero):
         self.attack_image=[pygame.image.load('images/wizard_attack_up1.png'),pygame.image.load('images/wizard_attack_up2.png')
             ,pygame.image.load('images/wizard_attack_down1.png'),pygame.image.load('images/wizard_attack_down2.png')]
 
-class Ballon(Hero):
+class Balloon(Hero):
     def __init__(self,position,id):
         Hero.__init__(self,798,1396,3,1,False,5,"air",("building"))
         self.position=position
@@ -77,12 +77,12 @@ class Giant(Hero):
         self.id=id
         self.move_image = [pygame.image.load('images/giant_move_up1.png'),pygame.image.load('images/giant_move_up2.png')
             ,pygame.image.load('images/giant_move_down1.png'),pygame.image.load('images/giant_move_down2.png')]
-        self.attack_image=[pygame.image.load('images/giant_attack_up1'),pygame.image.load('images/giant_attack_up2.png')
+        self.attack_image=[pygame.image.load('images/giant_attack_up1.png'),pygame.image.load('images/giant_attack_up2.png')
             ,pygame.image.load('images/giant_attack_down1.png'),pygame.image.load('images/giant_attack_down2.png')]
 
 class Knight(Hero):
     def __init__(self, position,id):
-        Hero.__init__(self, 155, 636, 1.5, 1, False, 2, "ground", ("ground", "building"))
+        Hero.__init__(self, 159, 1399, 1.2, 1, False, 3, "ground", ("ground", "building"))
         self.position = position
         self.id=id
         self.move_image = [pygame.image.load('images/knight_move_up1.png'),pygame.image.load('images/knight_move_up2.png')
@@ -98,7 +98,7 @@ class Mega_minion(Hero):
         self.id=id
         self.move_image = [pygame.image.load('images/mega_minion_move_up1.png'),pygame.image.load('images/mega_minion_move_up2.png')
             ,pygame.image.load('images/mega_minion_move_down1.png'),pygame.image.load('images/mega_minion_move_down2.png')]
-        self.attack_image=[pygame.image.load('images/mega_minion_attack_up1'),pygame.image.load('images/mega_minion_attack_up2.png')
+        self.attack_image=[pygame.image.load('images/mega_minion_attack_up1.png'),pygame.image.load('images/mega_minion_attack_up2.png')
             ,pygame.image.load('images/mega_minion_attack_down1.png'),pygame.image.load('images/mega_minion_attack_down2.png')]
 
 #builging information
@@ -132,31 +132,85 @@ def draw_map():
     '''draw map of the game at the first of the main while loop'''
     global window
     map_picture = pygame.image.load('images/field1-Recovered.jpg')
-    map_picture2=pygame.image.load('images/map2.jpg')
+    window.fill((0,0,0))
     window.blit(map_picture,(0,0))
-    window.blit(map_picture2,(600,0))
 
 
-def first_troops(dict):
+
+def first_troops():
     '''choose the 4 first cards to play'''
-    global trooplist
-    dictroop_temp = dict
-    for i in range(4):
-        card_id = random.randint(0,len(dictroop_temp)-1)
-        trooplist.append(list(dictroop_temp.values())[card_id])
-        del(dictroop[str(list(dictroop_temp.keys())[card_id])])
-    return trooplist
+    global trooplist,dictroop
+    dictroop_temp = dictroop
+    if len(trooplist)==0:
+        while len(trooplist)<=4:
+            card_id = random.randint(0,len(dictroop_temp)-1)
+            if list(dictroop_temp.values())[card_id] in trooplist:
+                continue
+            trooplist.append(list(dictroop_temp.values())[card_id])
+            trooplist_position.append((605, window_height - (trooplist[-1].get_size()[1] * (len(trooplist)))))
+            trooplist_name.append(list(dictroop_temp.keys())[card_id])
+        return trooplist
 
-def random_select_troop(dic):
+
+
+def random_select_troop():
     '''choose the next new cards'''
-    global trooplist
+    global trooplist,trooplist_name,trooplist_position
     dictroop_temp = dictroop
     while True:
         card_id = random.randint(0,len(dictroop_temp)-1)
         if list(dictroop_temp.values())[card_id] in trooplist:
             continue
-        trooplist.append(list(dictroop_temp.values())[card_id])
-        return trooplist
+        trooplist[card_selected[1]]=(list(dictroop_temp.values())[card_id])
+        trooplist_name[card_selected[1]]=(list(dictroop_temp.keys())[card_id])
+        trooplist_position[card_selected[1]]=((605,window_height-trooplist[card_selected[1]].get_size()[1]*(card_selected[1]+1)))
+        return None
+
+
+def drop_card():
+    global card_selected,heros_in_game
+    first_troops()
+    if pygame.mouse.get_pressed()[0]==True :
+        for i in range(len(trooplist_position)) :
+            if trooplist_position[i][0] <= pygame.mouse.get_pos()[0] <= trooplist_position[i][0]+trooplist[i].get_size()[0] \
+                and trooplist_position[i][1]<= pygame.mouse.get_pos()[1] <= trooplist_position[i][1]+trooplist[i].get_size()[1] and card_selected[0]==False :
+                card_selected[0]=True
+                card_selected[1]=i
+            if card_selected[0]==True and card_selected[1]==i :
+                mouse_pos=pygame.mouse.get_pos()
+                card_size=trooplist[i].get_size()
+                if mouse_pos[0]<card_size[0]/2 :
+                    if mouse_pos[1]<card_size[1]/2:
+                        trooplist_position[i]=(0,0)
+                    elif mouse_pos[1]>window_height-card_size[1]/2:
+                        trooplist_position[i]=(0,window_height-card_size[1])
+                    else :
+                        trooplist_position[i]=(0,mouse_pos[1]-card_size[1]/2)
+                elif mouse_pos[0] > window_width-card_size[0] / 2:
+                    if mouse_pos[1] < card_size[1] / 2:
+                        trooplist_position[i] = (window_width-card_size[0], 0)
+                    elif mouse_pos[1] > window_height - card_size[1] / 2:
+                        trooplist_position[i] = (window_width-card_size[0], window_height - card_size[1])
+                    else:
+                        trooplist_position[i] = (window_width-card_size[0], mouse_pos[1] - card_size[1]/ 2)
+                elif mouse_pos[1] < card_size[1] / 2:
+                    trooplist_position[i] = (mouse_pos[0]-card_size[0]/2, 0)
+                elif mouse_pos[1] > window_height-card_size[1]/2 :
+                    trooplist_position[i] = (mouse_pos[0]-card_size[0]/2,window_height-card_size[1])
+                else :
+                    trooplist_position[i]=(pygame.mouse.get_pos()[0]-(trooplist[i].get_size()[0]/2),pygame.mouse.get_pos()[1]-(trooplist[i].get_size()[1]/2))
+    elif card_selected[0]==True :
+            if (  trooplist_position[card_selected[1]][0] <= window_width-100-trooplist[card_selected[1]].get_size()[0]/2)  :
+                card_selected[0]=False
+                heros_in_game.append(eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]],1))
+                random_select_troop()
+            else :
+                trooplist_position[card_selected[1]]=(605,window_height-(card_selected[1]+1)*trooplist[card_selected[1]].get_size()[1])
+                card_selected[0]=False
+    for i in range(4):
+        window.blit(trooplist[i],trooplist_position[i])
+
+
 
 def move():
     global alive_troops
@@ -339,9 +393,21 @@ def quit_game():
     pygame.quit()
     sys.exit()
 #picture
+archer_card=pygame.image.load('images/ArcherCard.png')
+wizard_card=pygame.image.load('images/WizardCard.png')
+giant_card=pygame.image.load('images/GiantCard.png')
+balloon_card=pygame.image.load('images/BalloonCard.png')
+knight_card=pygame.image.load('images/KnightCard.png')
+pekka_card=pygame.image.load('images/MiniPEKKACard.png')
+mega_minion_card=pygame.image.load('images/MegaMinionCard.png')
 #variables
-dictroop = {"Archer" : 1 , "Wizard" : 2 , "Giant" : 3 , "Knight" : 4 , "Megaminion" : 5 , "pekka" : 6 , "Baloon" : 7 }
+dictroop = {"Archer" :archer_card  , "Wizard" : wizard_card , "Giant" : giant_card
+    , "Knight" : knight_card , "Mega_minion" : mega_minion_card , "Pekka" : pekka_card , "Balloon" : balloon_card }
+card_selected=[False,0]
+heros_in_game=[]
 trooplist = []
+trooplist_position=[]
+trooplist_name=[]
 window_width=700
 window_height=800
 
@@ -359,13 +425,16 @@ QueenTower_down_right_position = (470 , 700)
 #main()
 pygame.init()
 window=pygame.display.set_mode((window_width,window_height))
-while True :
 
+while True :
     draw_map()
+    for i in heros_in_game :
+        window.blit(i.move_image[1],i.position)
+    drop_card()
+
     for event in GAME_EVENTS.get():
         if event.type == GAME_GLOBALS.QUIT:
             quit_game()
-    time.sleep(0.3)
     pygame.display.update()
 
 
