@@ -15,7 +15,7 @@ class Hero :
 
 class Wizard(Hero):
     def __init__(self,position,id):
-        Hero.__init__(self,228,598,1.4,5.5,True,4,"ground",("air","ground","building"))
+        Hero.__init__(self,228,598,1.4,5.5,True,5,"ground",("air","ground","building"))
         self.position = position
         self.id=id
 
@@ -26,7 +26,7 @@ class Wizard(Hero):
         self.attack_image=[pygame.image.load('images/wizard_attack_up1.png'),pygame.image.load('images/wizard_attack_up2.png')
             ,pygame.image.load('images/wizard_attack_down1.png'),pygame.image.load('images/wizard_attack_down2.png')]
 
-class Ballon(Hero):
+class Balloon(Hero):
     def __init__(self,position,id):
         Hero.__init__(self,798,1396,3,1,False,5,"air",("building"))
         self.position=position
@@ -82,7 +82,7 @@ class Giant(Hero):
 
 class Knight(Hero):
     def __init__(self, position,id):
-        Hero.__init__(self, 155, 636, 1.5, 1, False, 2, "ground", ("ground", "building"))
+        Hero.__init__(self, 159, 1399, 1.2, 1, False, 3, "ground", ("ground", "building"))
         self.position = position
         self.id=id
         self.move_image = [pygame.image.load('images/knight_move_up1.png'),pygame.image.load('images/knight_move_up2.png')
@@ -132,22 +132,26 @@ def draw_map():
     '''draw map of the game at the first of the main while loop'''
     global window
     map_picture = pygame.image.load('images/field1-Recovered.jpg')
-    map_picture2=pygame.image.load('images/map2.jpg')
     window.blit(map_picture,(0,0))
-    window.blit(map_picture2,(600,0))
+    first_troops()
+    random_select_troop
 
-
-def first_troops(dict):
-    '''choose the 4 first cards to play'''
-    global trooplist
-    dictroop_temp = dict
     for i in range(4):
-        card_id = random.randint(0,len(dictroop_temp)-1)
-        trooplist.append(list(dictroop_temp.values())[card_id])
-        del(dictroop[str(list(dictroop_temp.keys())[card_id])])
-    return trooplist
+        window.blit(trooplist[i],(605,window_height-(trooplist[i].get_size()[1]*(i+1))))
 
-def random_select_troop(dic):
+
+def first_troops():
+    '''choose the 4 first cards to play'''
+    global trooplist,dictroop
+    dictroop_temp = dictroop
+    if len(trooplist)==0:
+        for i in range(4):
+            card_id = random.randint(0,len(dictroop_temp)-1)
+            trooplist.append(list(dictroop_temp.values())[card_id])
+            del(dictroop[str(list(dictroop_temp.keys())[card_id])])
+        return trooplist
+
+def random_select_troop():
     '''choose the next new cards'''
     global trooplist
     dictroop_temp = dictroop
@@ -165,14 +169,23 @@ def quit_game():
     pygame.quit()
     sys.exit()
 #picture
+archer_card=pygame.image.load('images/ArcherCard.png')
+wizard_card=pygame.image.load('images/WizardCard.png')
+giant_card=pygame.image.load('images/GiantCard.png')
+balloon_card=pygame.image.load('images/BalloonCard.png')
+knight_card=pygame.image.load('images/KnightCard.png')
+pekka_card=pygame.image.load('images/MiniPEKKACard.png')
+mega_minion_card=pygame.image.load('images/MegaMinionCard.png')
 #variables
-dictroop = {"Archer" : 1 , "Wizard" : 2 , "Giant" : 3 , "Knight" : 4 , "Megaminion" : 5 , "pekka" : 6 , "Baloon" : 7 }
+dictroop = {"Archer" :archer_card  , "Wizard" : wizard_card , "Giant" : giant_card
+    , "Knight" : knight_card , "Megaminion" : mega_minion_card , "pekka" : pekka_card , "Baloon" : balloon_card }
 trooplist = []
 window_width=700
 window_height=800
 #main()
 pygame.init()
 window=pygame.display.set_mode((window_width,window_height))
+
 while True :
 
     draw_map()
