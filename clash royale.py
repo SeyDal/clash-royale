@@ -137,11 +137,37 @@ def draw_map():
     window.blit(map_picture2,(600,0))
 
 
+def first_troops(dict):
+    '''choose the 4 first cards to play'''
+    global trooplist
+    dictroop_temp = dict
+    for i in range(4):
+        card_id = random.randint(0,len(dictroop_temp)-1)
+        trooplist.append(list(dictroop_temp.values())[card_id])
+        del(dictroop[str(list(dictroop_temp.keys())[card_id])])
+    return trooplist
+
+def random_select_troop(dic):
+    '''choose the next new card'''
+    global trooplist
+    dictroop_temp = dictroop
+    while True:
+        card_id = random.randint(0,len(dictroop_temp)-1)
+        if list(dictroop_temp.values())[card_id] in trooplist:
+            continue
+        trooplist.append(list(dictroop_temp.values())[card_id])
+        return trooplist
+
+
+
+
 def quit_game():
     pygame.quit()
     sys.exit()
 #picture
 #variables
+dictroop = {"Archer" : 1 , "Wizard" : 2 , "Giant" : 3 , "Knight" : 4 , "Megaminion" : 5 , "pekka" : 6 , "Baloon" : 7 }
+trooplist = []
 window_width=700
 window_height=800
 #main()
@@ -155,6 +181,5 @@ while True :
             quit_game()
     time.sleep(0.3)
     pygame.display.update()
-
 
 
