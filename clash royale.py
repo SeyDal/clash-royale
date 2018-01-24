@@ -158,6 +158,180 @@ def random_select_troop(dic):
         trooplist.append(list(dictroop_temp.values())[card_id])
         return trooplist
 
+def move():
+    global alive_troops
+    for i in alive_troops:
+        X0 = i.position[0]
+        Y0 = i.position[1]
+        X = X0
+        Y = Y0
+        if i.id == 1:
+            if i.position[1] > 420 :
+                if X > 300:
+                    if X > 470:
+                        X -= 5
+                        try:
+                            Y -= abs((bridge_down_right_position[1] - i.position[1]) / (
+                                    bridge_down_right_position[0] - i.position[0])) * 5
+                        except ZeroDivisionError:
+                            Y = Y0 - 5
+                        if abs(Y - Y0) > 8.5:
+                            Y = Y0 - 5
+                    else:
+                        X += 5
+                        try:
+                            Y -= abs((bridge_down_right_position[1] - i.position[1]) / (
+                                    bridge_down_right_position[0] - i.position[0])) * 5
+                        except:
+                            Y = Y0 - 5
+                        if abs(Y - Y0) > 8.5:
+                            Y = Y0 - 5
+                elif X > 90:
+                    X -= 5
+                    try:
+                        Y -= abs((bridge_down_left_position[1] - i.position[1]) / (
+                                bridge_down_left_position[0] - i.position[0])) * 5
+                    except:
+                        Y = Y0 - 5
+                    if abs(Y - Y0) > 8.5:
+                        Y = Y0 - 5
+                else:
+                    X += 5
+                    try:
+                        Y += abs((bridge_down_left_position[1] - i.position[1]) / (
+                                bridge_down_left_position[0] - i.position[0])) * 5
+                    except:
+                        Y = Y0 - 5
+                    if abs(Y - Y0) > 8.5:
+                        Y = Y0 - 5
+
+
+            else:
+                if X > 300:
+                    if X > 470:
+                        X -= 5
+                        try:
+                            Y -= abs((QueenTower_up_right_position[1] - i.position[1]) / (
+                                    QueenTower_up_right_position[0] - i.position[0]))*5
+                        except:
+                            Y = Y0 - 5
+                        if abs(Y - Y0) > 8.5:
+                            Y = Y0 - 5
+                    else:
+                        X += 5
+                        try:
+                            Y -= abs((QueenTower_up_right_position[1] - i.position[1]) / (
+                                    QueenTower_up_right_position[0] - i.position[0]))*5
+                        except:
+                            Y = Y0 - 5
+                        if abs(Y - Y0) > 8.5:
+                            Y = Y0 - 5
+                elif X > 90:
+                    X -= 5
+                    try:
+                        Y -= abs((QueenTower_up_lef_position[1] - i.position[1]) / (
+                                QueenTower_up_lef_position[0] - i.position[0]))*5
+                    except:
+                        Y = Y0 - 5
+                    if abs(Y - Y0) > 8.5:
+                        Y = Y0 - 5
+                else:
+                    X += 5
+                    try:
+                        Y -= abs((QueenTower_up_lef_position[1] - i.position[1]) / (
+                                QueenTower_up_lef_position[0] - i.position[0]))*5
+                    except:
+                        Y = Y0 - 5
+                    if abs(Y - Y0) > 8.5:
+                        Y = Y0 - 5
+            i.position = (X, Y)
+
+
+        elif i.id == 2 :
+            X0 = i.position[0]
+            Y0 = i.position[1]
+            X = X0
+            Y = Y0
+            if i.position[1] < 375 :
+                if X > 300:
+                    if X > 470:
+                        X -= 5
+                        try:
+                            Y += abs((bridge_up_right_position[1] - i.position[1]) / (
+                                    bridge_up_right_position[0] - i.position[0])) * 5
+                        except ZeroDivisionError:
+                            Y = Y0 + 5
+                        if abs(Y - Y0) > 8.5:
+                            Y = Y0 + 5
+                    else:
+                        X += 5
+                        try:
+                            Y += abs((bridge_up_right_position[1] - i.position[1]) / (
+                                    bridge_up_right_position[0] - i.position[0])) * 5
+                        except:
+                            Y = Y0 + 5
+                        if abs(Y - Y0) > 8.5:
+                            Y = Y0 + 5
+                elif X > 90:
+                    X -= 5
+                    try:
+                        Y += abs((bridge_up_left_position[1] - i.position[1]) / (
+                                bridge_up_left_position[0] - i.position[0])) * 5
+                    except:
+                        Y = Y0 + 5
+                    if abs(Y - Y0) > 8.5:
+                        Y = Y0 + 5
+                else:
+                    X += 5
+                    try:
+                        Y += abs((bridge_up_left_position[1] - i.position[1]) / (
+                                bridge_up_left_position[0] - i.position[0])) * 5
+                    except:
+                        Y = Y0 + 5
+                    if abs(Y - Y0) > 8.5:
+                        Y = Y0 + 5
+
+
+            else:
+                if X > 300:
+                    if X > 470:
+                        X -= 5
+                        try:
+                            Y += abs((QueenTower_down_right_position[1] - i.position[1]) / (
+                                    QueenTower_down_right_position[0] - i.position[0]))*5
+                        except:
+                            Y = Y0 + 8
+                        if abs(Y - Y0) > 8.5:
+                            Y = Y0 + 8
+                    else:
+                        X += 5
+                        try:
+                            Y += abs((QueenTower_down_right_position[1] - i.position[1]) / (
+                                    QueenTower_down_right_position[0] - i.position[0]))*5
+                        except:
+                            Y = Y0 + 8
+                        if abs(Y - Y0) > 8.5:
+                            Y = Y0 + 8
+                elif X > 90:
+                    X -= 5
+                    try:
+                        Y += abs((QueenTower_down_lef_position[1] - i.position[1]) / (
+                                QueenTower_down_lef_position[0] - i.position[0]))*5
+                    except:
+                        Y = Y0 + 8
+                    if abs(Y - Y0) > 8.5:
+                        Y = Y0 + 8
+                else:
+                    X += 5
+                    try:
+                        Y += abs((QueenTower_down_lef_position[1] - i.position[1]) / (
+                                QueenTower_down_lef_position[0] - i.position[0]))*5
+                    except:
+                        Y = Y0 + 8
+                    if abs(Y - Y0) > 8.5:
+                        Y = Y0 + 8
+            i.position = (X, Y)
+
 
 
 
@@ -170,6 +344,18 @@ dictroop = {"Archer" : 1 , "Wizard" : 2 , "Giant" : 3 , "Knight" : 4 , "Megamini
 trooplist = []
 window_width=700
 window_height=800
+
+
+bridge_up_left_position = (90.5 , 370.5)
+bridge_down_left_position = (90.5 , 420.5)
+bridge_up_right_position = (470.5 , 370.5)
+bridge_down_right_position = (470.5 , 420.5)
+
+QueenTower_up_lef_position = (90 , 85)
+QueenTower_up_right_position = (470 , 85)
+QueenTower_down_lef_position = (90 , 700)
+QueenTower_down_right_position = (470 , 700)
+
 #main()
 pygame.init()
 window=pygame.display.set_mode((window_width,window_height))
