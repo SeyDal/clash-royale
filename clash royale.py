@@ -148,7 +148,7 @@ def first_troops(dict):
     return trooplist
 
 def random_select_troop(dic):
-    '''choose the next new card'''
+    '''choose the next new cards'''
     global trooplist
     dictroop_temp = dictroop
     while True:
