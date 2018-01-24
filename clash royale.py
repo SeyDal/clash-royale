@@ -200,10 +200,13 @@ def drop_card():
                 else :
                     trooplist_position[i]=(pygame.mouse.get_pos()[0]-(trooplist[i].get_size()[0]/2),pygame.mouse.get_pos()[1]-(trooplist[i].get_size()[1]/2))
     elif card_selected[0]==True :
-        card_selected[0]=False
-        heros_in_game.append(eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]],1))
-        print(card_selected[1])
-        random_select_troop()
+            if (  trooplist_position[card_selected[1]][0] <= window_width-100-trooplist[card_selected[1]].get_size()[0]/2)  :
+                card_selected[0]=False
+                heros_in_game.append(eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]],1))
+                random_select_troop()
+            else :
+                trooplist_position[card_selected[1]]=(605,window_height-(card_selected[1]+1)*trooplist[card_selected[1]].get_size()[1])
+                card_selected[0]=False
     for i in range(4):
         window.blit(trooplist[i],trooplist_position[i])
 
@@ -238,7 +241,6 @@ pygame.init()
 window=pygame.display.set_mode((window_width,window_height))
 
 while True :
-
     draw_map()
     for i in heros_in_game :
         window.blit(i.move_image[1],i.position)
