@@ -447,6 +447,15 @@ def move():
 
 
 
+def show_heros_in_game (image_counter):
+    for hero in heros_in_game :
+        pos = (hero.position[0] - hero.move_image[image_counter % 2].get_size()[0] / 2,
+               hero.position[1] - hero.move_image[image_counter % 2].get_size()[1] / 2)
+        if hero.id==1 :
+            window.blit(hero.move_image[image_counter%2],pos)
+        if hero.id==2 :
+            window.blit(hero.move_image[image_counter%2+2], pos)
+
 
 def quit_game():
     pygame.quit()
@@ -484,11 +493,11 @@ QueenTower_down_right_position = (5100 , 700)
 #main()
 pygame.init()
 window=pygame.display.set_mode((window_width,window_height))
+image_counter=0
 
 while True :
     draw_map()
-    for i in heros_in_game :
-        window.blit(i.move_image[1],(i.position[0]-i.move_image[1].get_size()[0]/2,i.position[1]-i.move_image[1].get_size()[1]/2))
+    show_heros_in_game(image_counter)
     drop_card()
     move()
 
@@ -496,6 +505,7 @@ while True :
     for event in GAME_EVENTS.get():
         if event.type == GAME_GLOBALS.QUIT:
             quit_game()
+    time.sleep(0.1)
     pygame.display.update()
 
 
