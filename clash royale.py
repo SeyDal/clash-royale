@@ -213,8 +213,8 @@ def drop_card():
 
 
 def move():
-    global alive_troops
-    for i in alive_troops:
+    global heros_in_game
+    for i in heros_in_game:
         X0 = i.position[0]
         Y0 = i.position[1]
         X = X0
@@ -222,82 +222,114 @@ def move():
         if i.id == 1:
             if i.position[1] > 420 :
                 if X > 300:
-                    if X > 470:
-                        X -= 5
+                    if X > 510 :
+                        if X > 520 or X < 500:
+                            X -= 5
                         try:
                             Y -= abs((bridge_down_right_position[1] - i.position[1]) / (
                                     bridge_down_right_position[0] - i.position[0])) * 5
                         except ZeroDivisionError:
                             Y = Y0 - 5
-                        if abs(Y - Y0) > 8.5:
+                        if abs(Y - Y0) > 5.5 :
                             Y = Y0 - 5
+                        if abs(Y - Y0) < 0.1 :
+                            Y = Y0 - 5
+                        print((X,Y),1)
                     else:
-                        X += 5
+                        if X > 520 or X < 500:
+                            X += 5
                         try:
                             Y -= abs((bridge_down_right_position[1] - i.position[1]) / (
                                     bridge_down_right_position[0] - i.position[0])) * 5
                         except:
                             Y = Y0 - 5
-                        if abs(Y - Y0) > 8.5:
+                        if abs(Y - Y0) > 5.5 :
                             Y = Y0 - 5
+                        if abs(Y - Y0) < 0.1 :
+                            Y = Y0 - 5
+                        print((X, Y), 2)
                 elif X > 90:
-                    X -= 5
+                    if X > 100 or X < 80:
+                        X -= 5
                     try:
                         Y -= abs((bridge_down_left_position[1] - i.position[1]) / (
                                 bridge_down_left_position[0] - i.position[0])) * 5
                     except:
                         Y = Y0 - 5
-                    if abs(Y - Y0) > 8.5:
+                    if abs(Y - Y0) > 5.5:
                         Y = Y0 - 5
+                    if abs(Y - Y0) < 0.1:
+                        Y = Y0 - 5
+                    print((X, Y), 3)
                 else:
-                    X += 5
+                    if X > 100 or X < 80:
+                        X += 5
                     try:
-                        Y += abs((bridge_down_left_position[1] - i.position[1]) / (
+                        Y -= abs((bridge_down_left_position[1] - i.position[1]) / (
                                 bridge_down_left_position[0] - i.position[0])) * 5
                     except:
                         Y = Y0 - 5
-                    if abs(Y - Y0) > 8.5:
+                    if abs(Y - Y0) > 5.5:
                         Y = Y0 - 5
+                    if abs(Y - Y0) < 0.1:
+                        Y = Y0 - 5
+                    print((X, Y), 4)
 
 
             else:
-                if X > 300:
-                    if X > 470:
-                        X -= 5
+                if X > 300 :
+                    if X > 510:
+                        if X > 520 or X < 500 :
+                            X -= 5
                         try:
                             Y -= abs((QueenTower_up_right_position[1] - i.position[1]) / (
                                     QueenTower_up_right_position[0] - i.position[0]))*5
                         except:
                             Y = Y0 - 5
-                        if abs(Y - Y0) > 8.5:
+                        if abs(Y - Y0) > 5.5:
                             Y = Y0 - 5
+                        if abs(Y - Y0) < 0.1 :
+                            Y = Y0 - 5
+                        print((X, Y), 5)
                     else:
-                        X += 5
+                        if X > 520 or X < 500:
+                            X += 5
                         try:
                             Y -= abs((QueenTower_up_right_position[1] - i.position[1]) / (
                                     QueenTower_up_right_position[0] - i.position[0]))*5
                         except:
                             Y = Y0 - 5
-                        if abs(Y - Y0) > 8.5:
+                        if abs(Y - Y0) > 5.5:
                             Y = Y0 - 5
+                        if abs(Y - Y0) < 0.1 :
+                            Y = Y0 - 5
+                        print((X, Y), 6)
                 elif X > 90:
-                    X -= 5
+                    if X > 100 or X < 80:
+                        X -= 5
                     try:
                         Y -= abs((QueenTower_up_lef_position[1] - i.position[1]) / (
                                 QueenTower_up_lef_position[0] - i.position[0]))*5
                     except:
                         Y = Y0 - 5
-                    if abs(Y - Y0) > 8.5:
+                    if abs(Y - Y0) > 5.5:
                         Y = Y0 - 5
+                    if abs(Y - Y0) < 0.1:
+                        Y = Y0 - 5
+                    print((X, Y), 7)
                 else:
-                    X += 5
+                    if X > 100 or X < 80:
+                        X += 5
                     try:
                         Y -= abs((QueenTower_up_lef_position[1] - i.position[1]) / (
                                 QueenTower_up_lef_position[0] - i.position[0]))*5
                     except:
                         Y = Y0 - 5
-                    if abs(Y - Y0) > 8.5:
+                    if abs(Y - Y0) > 5.5:
                         Y = Y0 - 5
+                    if abs(Y - Y0) < 0.1:
+                        Y = Y0 - 5
+                    print((X, Y), 8)
             i.position = (X, Y)
 
 
@@ -306,84 +338,111 @@ def move():
             Y0 = i.position[1]
             X = X0
             Y = Y0
-            if i.position[1] < 375 :
+            if i.position[1] < 370 :
                 if X > 300:
-                    if X > 470:
-                        X -= 5
+                    if X > 510:
+                        if X > 520 or X < 500:
+                            X -= 5
                         try:
                             Y += abs((bridge_up_right_position[1] - i.position[1]) / (
                                     bridge_up_right_position[0] - i.position[0])) * 5
                         except ZeroDivisionError:
                             Y = Y0 + 5
-                        if abs(Y - Y0) > 8.5:
+                        if abs(Y - Y0) > 5.5:
+                            Y = Y0 + 5
+                        if abs(Y - Y0) < 0.1 :
                             Y = Y0 + 5
                     else:
-                        X += 5
+                        if X > 520 or X < 500:
+                            X += 5
                         try:
                             Y += abs((bridge_up_right_position[1] - i.position[1]) / (
                                     bridge_up_right_position[0] - i.position[0])) * 5
                         except:
                             Y = Y0 + 5
-                        if abs(Y - Y0) > 8.5:
+                        if abs(Y - Y0) > 5.5:
+                            Y = Y0 + 5
+                        if abs(Y - Y0) < 0.1 :
                             Y = Y0 + 5
                 elif X > 90:
-                    X -= 5
+                    if X > 100 or X < 80:
+                        X -= 5
                     try:
                         Y += abs((bridge_up_left_position[1] - i.position[1]) / (
                                 bridge_up_left_position[0] - i.position[0])) * 5
                     except:
                         Y = Y0 + 5
-                    if abs(Y - Y0) > 8.5:
+                    if abs(Y - Y0) > 5.5:
+                        Y = Y0 + 5
+                    if abs(Y - Y0) < 0.1:
                         Y = Y0 + 5
                 else:
-                    X += 5
+                    if X > 100 or X < 80:
+                        X += 5
                     try:
                         Y += abs((bridge_up_left_position[1] - i.position[1]) / (
                                 bridge_up_left_position[0] - i.position[0])) * 5
                     except:
                         Y = Y0 + 5
-                    if abs(Y - Y0) > 8.5:
+                    if abs(Y - Y0) > 5.5:
+                        Y = Y0 + 5
+                    if abs(Y - Y0) < 0.1:
                         Y = Y0 + 5
 
 
             else:
                 if X > 300:
-                    if X > 470:
-                        X -= 5
+                    if X > 510:
+                        if X > 520 or X < 500:
+                            X -= 5
                         try:
                             Y += abs((QueenTower_down_right_position[1] - i.position[1]) / (
                                     QueenTower_down_right_position[0] - i.position[0]))*5
                         except:
-                            Y = Y0 + 8
-                        if abs(Y - Y0) > 8.5:
-                            Y = Y0 + 8
+                            Y = Y0 + 5
+                        if abs(Y - Y0) > 5.5:
+                            Y = Y0 + 5
+                        if abs(Y - Y0) < 0.1 :
+                            Y = Y0 + 5
+
                     else:
-                        X += 5
+                        if X > 520 or X < 500:
+                            X += 5
                         try:
                             Y += abs((QueenTower_down_right_position[1] - i.position[1]) / (
                                     QueenTower_down_right_position[0] - i.position[0]))*5
                         except:
-                            Y = Y0 + 8
-                        if abs(Y - Y0) > 8.5:
-                            Y = Y0 + 8
+                            Y = Y0 + 5
+                        if abs(Y - Y0) > 5.5:
+                            Y = Y0 + 5
+                        if abs(Y - Y0) < 0.1 :
+                            Y = Y0 + 5
+
                 elif X > 90:
-                    X -= 5
+                    if X > 100 or X < 80:
+                        X -= 5
                     try:
                         Y += abs((QueenTower_down_lef_position[1] - i.position[1]) / (
                                 QueenTower_down_lef_position[0] - i.position[0]))*5
                     except:
-                        Y = Y0 + 8
-                    if abs(Y - Y0) > 8.5:
-                        Y = Y0 + 8
+                        Y = Y0 + 5
+                    if abs(Y - Y0) > 5.5:
+                        Y = Y0 + 5
+                    if abs(Y - Y0) < 0.1:
+                        Y = Y0 + 5
                 else:
-                    X += 5
+                    if X > 100 or X < 80:
+                        X += 5
                     try:
                         Y += abs((QueenTower_down_lef_position[1] - i.position[1]) / (
                                 QueenTower_down_lef_position[0] - i.position[0]))*5
                     except:
-                        Y = Y0 + 8
-                    if abs(Y - Y0) > 8.5:
-                        Y = Y0 + 8
+                        Y = Y0 + 5
+                    if abs(Y - Y0) > 5.5:
+                        Y = Y0 + 5
+                    if abs(Y - Y0) < 0.1:
+                        Y = Y0 + 5
+
             i.position = (X, Y)
 
 
@@ -412,15 +471,15 @@ window_width=700
 window_height=800
 
 
-bridge_up_left_position = (90.5 , 370.5)
-bridge_down_left_position = (90.5 , 420.5)
-bridge_up_right_position = (470.5 , 370.5)
-bridge_down_right_position = (470.5 , 420.5)
+bridge_up_left_position = (90 , 370)
+bridge_down_left_position = (90 , 420)
+bridge_up_right_position = (510 , 370)
+bridge_down_right_position = (510 , 420)
 
 QueenTower_up_lef_position = (90 , 85)
-QueenTower_up_right_position = (470 , 85)
+QueenTower_up_right_position = (510 , 85)
 QueenTower_down_lef_position = (90 , 700)
-QueenTower_down_right_position = (470 , 700)
+QueenTower_down_right_position = (5100 , 700)
 
 #main()
 pygame.init()
@@ -429,8 +488,10 @@ window=pygame.display.set_mode((window_width,window_height))
 while True :
     draw_map()
     for i in heros_in_game :
-        window.blit(i.move_image[1],i.position)
+        window.blit(i.move_image[1],(i.position[0]-i.move_image[1].get_size()[0]/2,i.position[1]-i.move_image[1].get_size()[1]/2))
     drop_card()
+    move()
+
 
     for event in GAME_EVENTS.get():
         if event.type == GAME_GLOBALS.QUIT:
