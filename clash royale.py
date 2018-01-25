@@ -234,7 +234,6 @@ def move():
                             Y = Y0 - 5
                         if abs(Y - Y0) < 0.1 :
                             Y = Y0 - 5
-                        print((X,Y),1)
                     else:
                         if X > 520 or X < 500:
                             X += 5
@@ -247,7 +246,6 @@ def move():
                             Y = Y0 - 5
                         if abs(Y - Y0) < 0.1 :
                             Y = Y0 - 5
-                        print((X, Y), 2)
                 elif X > 90:
                     if X > 100 or X < 80:
                         X -= 5
@@ -260,7 +258,6 @@ def move():
                         Y = Y0 - 5
                     if abs(Y - Y0) < 0.1:
                         Y = Y0 - 5
-                    print((X, Y), 3)
                 else:
                     if X > 100 or X < 80:
                         X += 5
@@ -273,7 +270,6 @@ def move():
                         Y = Y0 - 5
                     if abs(Y - Y0) < 0.1:
                         Y = Y0 - 5
-                    print((X, Y), 4)
 
 
             else:
@@ -290,7 +286,6 @@ def move():
                             Y = Y0 - 5
                         if abs(Y - Y0) < 0.1 :
                             Y = Y0 - 5
-                        print((X, Y), 5)
                     else:
                         if X > 520 or X < 500:
                             X += 5
@@ -303,7 +298,6 @@ def move():
                             Y = Y0 - 5
                         if abs(Y - Y0) < 0.1 :
                             Y = Y0 - 5
-                        print((X, Y), 6)
                 elif X > 90:
                     if X > 100 or X < 80:
                         X -= 5
@@ -316,7 +310,6 @@ def move():
                         Y = Y0 - 5
                     if abs(Y - Y0) < 0.1:
                         Y = Y0 - 5
-                    print((X, Y), 7)
                 else:
                     if X > 100 or X < 80:
                         X += 5
@@ -329,7 +322,6 @@ def move():
                         Y = Y0 - 5
                     if abs(Y - Y0) < 0.1:
                         Y = Y0 - 5
-                    print((X, Y), 8)
             i.position = (X, Y)
 
 
@@ -449,10 +441,15 @@ def move():
 
 def show_heros_in_game (image_counter):
     for hero in heros_in_game :
-        pos = (hero.position[0] - hero.move_image[image_counter % 2].get_size()[0] / 2,
-               hero.position[1] - hero.move_image[image_counter % 2].get_size()[1] / 2)
         if hero.id==1 :
-            window.blit(hero.move_image[image_counter%2],pos)
+            if image_counter % 20 < 10:
+                pos = (hero.position[0] - hero.move_image[0].get_size()[0] / 2,
+                       hero.position[1] - hero.move_image[0].get_size()[1] / 2)
+                window.blit(hero.move_image[0],pos)
+            else :
+                pos = (hero.position[0] - hero.move_image[1].get_size()[0] / 2,
+                       hero.position[1] - hero.move_image[1].get_size()[1] / 2)
+                window.blit(hero.move_image[1], pos)
         if hero.id==2 :
             window.blit(hero.move_image[image_counter%2+2], pos)
 
@@ -498,14 +495,16 @@ image_counter=0
 while True :
     draw_map()
     show_heros_in_game(image_counter)
+    image_counter+=1
     drop_card()
-    move()
+    if image_counter % 6 == 0 :
+        move()
 
 
     for event in GAME_EVENTS.get():
         if event.type == GAME_GLOBALS.QUIT:
             quit_game()
-    time.sleep(0.1)
+
     pygame.display.update()
 
 
