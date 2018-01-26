@@ -4,7 +4,7 @@ import pygame.event as GAME_EVENTS
 #heros infornarions
 class Hero :
     def __init__(self,damage,hit_point,hit_speed,range,area_damage,hero_cost,hero_type,target):
-        self.Damage=damage
+        self.damage=damage
         self.hit_point=hit_point
         self.hit_speed=hit_speed
         self.range=range
@@ -25,6 +25,7 @@ class Wizard(Hero):
             ,pygame.image.load('images/wizard_move_down1.png'),pygame.image.load('images/wizard_move_down2.png')]
         self.attack_image=[pygame.image.load('images/wizard_attack_up1.png'),pygame.image.load('images/wizard_attack_up2.png')
             ,pygame.image.load('images/wizard_attack_down1.png'),pygame.image.load('images/wizard_attack_down2.png')]
+        self.weapon_image = [pygame.image.load ("images/Wizard_fire.png") , self.position]
 
 class Balloon(Hero):
     def __init__(self,position,id):
@@ -35,6 +36,7 @@ class Balloon(Hero):
             ,pygame.image.load('images/balloon1.png'),pygame.image.load('images/balloon1.png')]
         self.attack_image=[pygame.image.load('images/balloon1.png'),pygame.image.load('images/balloon1.png')
             ,pygame.image.load('images/balloon1.png'),pygame.image.load('images/balloon1.png')]
+        self.weapon_image = [pygame.image.load ("images/weapon.png") , self.position]
 
 
 class Pekka(Hero):
@@ -46,6 +48,7 @@ class Pekka(Hero):
             ,pygame.image.load('images/pekka_move_down1.png'),pygame.image.load('images/pekka_move_down2.png')]
         self.attack_image=[pygame.image.load('images/pekka_attack_up1.png'),pygame.image.load('images/pekka_attack_up2.png')
             ,pygame.image.load('images/pekka_attack_down1.png'),pygame.image.load('images/pekka_attack_down2.png')]
+        self.weapon_image = [pygame.image.load ("images/weapon.png") , self.position]
 
 
 class Archer(Hero):
@@ -57,6 +60,7 @@ class Archer(Hero):
             ,pygame.image.load('images/archer_move_down1.png'),pygame.image.load('images/archer_move_down2.png')]
         self.attack_image=[pygame.image.load('images/archer_attack_up1.png'),pygame.image.load('images/archer_attack_up2.png')
             ,pygame.image.load('images/archer_attack_down1.png'),pygame.image.load('images/archer_attack_down2.png')]
+        self.weapon_image = [pygame.image.load ("images/Archer_arrow.png") , self.position]
 
 class Power :
     def __init__(self,position,id):
@@ -68,6 +72,7 @@ class Power :
         self.id=id
         self.move_image =[pygame.image.load(),pygame.image.load(),pygame.image.load(),pygame.image.load()]
         self.attack_image=[pygame.image.load(),pygame.image.load(),pygame.image.load(),pygame.image.load()]
+        self.weapon_image = [pygame.image.load ("images/weapon.png") , self.position]
 
 
 class Giant(Hero):
@@ -79,6 +84,7 @@ class Giant(Hero):
             ,pygame.image.load('images/giant_move_down1.png'),pygame.image.load('images/giant_move_down2.png')]
         self.attack_image=[pygame.image.load('images/giant_attack_up1.png'),pygame.image.load('images/giant_attack_up2.png')
             ,pygame.image.load('images/giant_attack_down1.png'),pygame.image.load('images/giant_attack_down2.png')]
+        self.weapon_image = [pygame.image.load ("images/weapon.png") , self.position]
 
 class Knight(Hero):
     def __init__(self, position,id):
@@ -89,6 +95,7 @@ class Knight(Hero):
             ,pygame.image.load('images/knight_move_down1.png'),pygame.image.load('images/knight_move_down2.png')]
         self.attack_image=[pygame.image.load('images/knight_attack_up1.png'),pygame.image.load('images/knight_attack_up2.png')
             ,pygame.image.load('images/knight_attack_down1.png'),pygame.image.load('images/knight_attack_down2.png')]
+        self.weapon_image = [pygame.image.load ("images/weapon.png") , self.position]
 
 
 class Mega_minion(Hero):
@@ -100,8 +107,9 @@ class Mega_minion(Hero):
             ,pygame.image.load('images/mega_minion_move_down1.png'),pygame.image.load('images/mega_minion_move_down2.png')]
         self.attack_image=[pygame.image.load('images/mega_minion_attack_up1.png'),pygame.image.load('images/mega_minion_attack_up2.png')
             ,pygame.image.load('images/mega_minion_attack_down1.png'),pygame.image.load('images/mega_minion_attack_down2.png')]
+        self.weapon_image = [pygame.image.load ("images/weapon.png") , self.position]
 
-#builging information
+    #builging information
 class Building :
     def __init__(self,damage,hit_point,hit_speed,range):
         self.damage=damage
@@ -214,8 +222,10 @@ def drop_card():
 
 
 def move():
+
     global heros_in_game
     for i in heros_in_game:
+       # print(i.weapon_image[1])
 
         if attacking_heros_in_game[heros_in_game.index(i)]==False :
             X0 = i.position[0]
@@ -442,6 +452,7 @@ def move():
 
 
 
+
 def show_heros_in_game (image_counter):
     for hero in heros_in_game :
         if attacking_heros_in_game[heros_in_game.index(hero)]==False :
@@ -485,7 +496,6 @@ def show_heros_in_game (image_counter):
 
 def fire() :
     for hero1 in heros_in_game :
-        attacking_heros_in_game[heros_in_game.index(hero1)]=False
         for hero2 in heros_in_game :
             if hero1.id != hero2.id :
                 if image_counter % 20 < 10:
@@ -501,8 +511,68 @@ def fire() :
 
                 distance=((x1-x2)**2+(y1-y2)**2)**0.5
                 if distance/20<=hero1.range :
-                    attacking_heros_in_game[heros_in_game.index(hero1)]=True
+                    if attacking_heros_in_game[heros_in_game.index(hero1)]==False:
+                        hero1.weapon_image[1] = hero1.position
+                        attacking_heros_in_game[heros_in_game.index(hero1)]=True
+                        shoot(hero2.position , hero1.weapon_image , hero1 , hero2)
+                        window.blit(hero1.weapon_image[0],hero1.weapon_image[1])
+                        print(hero1.weapon_image[1],44)
+                    else:
+                        print(hero1.weapon_image[1], 55)
+                        attacking_heros_in_game[heros_in_game.index(hero1)] = True
+                        shoot(hero2.position, hero1.weapon_image, hero1, hero2)
 
+                        window.blit(hero1.weapon_image[0], (hero1.weapon_image[1][0] - hero1.weapon_image[0].get_size()[0]/2 ,hero1.weapon_image[1][1] - hero1.weapon_image[0].get_size()[1]/2))
+    for hero in heros_in_game:
+        if hero.hit_point <= 0 :
+            k=heros_in_game.index(hero)
+            del heros_in_game[k]
+            del attacking_heros_in_game[k]
+
+
+def shoot(target_position , weapon_image , hero1 , hero2):
+    if target_position[0] - 15 < weapon_image[1][0]  and target_position[0] +15 > weapon_image[1][0] :
+        if target_position[1] -20 < weapon_image[1][1]  and target_position[1] +20 > weapon_image[1][1]  :
+            hero2.hit_point -= hero1.damage
+            attacking_heros_in_game[heros_in_game.index(hero1)] = False
+            weapon_image[1] = hero1.position
+
+    x1 = weapon_image[1][0]
+    y1 = weapon_image[1][1]
+    if x1 > target_position[0]:
+        if y1 > target_position[1] :
+            x1 -= 1
+            try :
+                y1 -= (target_position[1] - y1) / (target_position[0] - x1)
+            except :
+                y1 = weapon_image[1][1] - 10
+            if abs(weapon_image[1][1] - y1) > 10 :
+                y1 = weapon_image[1][1] - 10
+        else:
+            x1 -= 1
+            try :
+                y1 += (target_position[1] - y1) / (target_position[0] - x1)
+            except :
+                y1 = weapon_image[1][1] + 10
+            if abs(weapon_image[1][1] - y1) > 10 :
+                y1 = weapon_image[1][1] + 10
+    elif y1 < target_position[1] :
+        x1 += 1
+        try:
+            y1 += (target_position[1] - y1) / (target_position[0] - x1)
+        except:
+            y1 = weapon_image[1][1] + 10
+        if abs(weapon_image[1][1] - y1) > 10:
+            y1 = weapon_image[1][1] + 10
+    else :
+        x1 += 1
+        try:
+            y1 -= (target_position[1] - y1) / (target_position[0] - x1)
+        except:
+            y1 = weapon_image[1][1] - 10
+        if abs(weapon_image[1][1] - y1) > 10:
+            y1 = weapon_image[1][1] - 10
+    weapon_image[1] = (x1 , y1)
 
 def quit_game():
     pygame.quit()
@@ -544,6 +614,7 @@ window=pygame.display.set_mode((window_width,window_height))
 image_counter=0
 
 while True :
+    time.sleep(0.1)
     draw_map()
     image_counter+=1
     drop_card()
