@@ -1,6 +1,8 @@
 import pygame,time,random,sys
 import pygame.locals as GAME_GLOBALS
 import pygame.event as GAME_EVENTS
+import  pygame.time as GAME_TIME
+
 #heros infornarions
 class Hero :
     def __init__(self,damage,hit_point,hit_speed,range,area_damage,hero_cost,hero_type,target):
@@ -183,7 +185,7 @@ def random_select_troop():
 
 
 def drop_card():
-    global card_selected,heros_in_game
+    global card_selected,heros_in_game,elixirs_teem1
     first_troops()
     if pygame.mouse.get_pressed()[0]==True :
         for i in range(len(trooplist_position)) :
@@ -215,11 +217,13 @@ def drop_card():
                 else :
                     trooplist_position[i]=(pygame.mouse.get_pos()[0]-(trooplist[i].get_size()[0]/2),pygame.mouse.get_pos()[1]-(trooplist[i].get_size()[1]/2))
     elif card_selected[0]==True :
-            if (  trooplist_position[card_selected[1]][0] <= window_width-100-trooplist[card_selected[1]].get_size()[0]/2)  :
+            if (  trooplist_position[card_selected[1]][0] <= window_width-100-trooplist[card_selected[1]].get_size()[0]/2)\
+                and elixirs_teem1>=eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]],1).hero_cost:
                 card_selected[0]=False
                 heros_in_game.append(eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]],1))
                 attacking_heros_in_game.append(False)
                 target_heros_in_game.append([])
+                elixirs_teem1-=heros_in_game[-1].hero_cost
                 random_select_troop()
             else :
                 trooplist_position[card_selected[1]]=(605,window_height-(card_selected[1]+1)*trooplist[card_selected[1]].get_size()[1])
@@ -905,110 +909,129 @@ def show_heros_in_game (image_counter):
 
 def fire() :
     for hero1 in heros_in_game :
+        shoot_result1=False
         for hero2 in heros_in_game :
-            if hero1.id != hero2.id :
-                if image_counter % 20 < 10:
-                    x1=hero1.position[0]+hero1.attack_image[(hero1.id-1)*2].get_size()[0] / 2
-                    y1=hero1.position[1]+hero1.attack_image[(hero1.id-1)*2].get_size()[1] / 2
-                    x2=hero2.position[0]+hero2.attack_image[(hero1.id-1)*2].get_size()[0] / 2
-                    y2=hero2.position[1]+hero2.attack_image[(hero1.id-1)*2].get_size()[1] / 2
-                else :
-                    x1 = hero1.position[0] + hero1.attack_image[(hero1.id - 1) * 2+1].get_size()[0] / 2
-                    y1 = hero1.position[1] + hero1.attack_image[(hero1.id - 1) * 2+1].get_size()[1] / 2
-                    x2 = hero2.position[0] + hero2.attack_image[(hero1.id - 1) * 2+1].get_size()[0] / 2
-                    y2 = hero2.position[1] + hero2.attack_image[(hero1.id - 1) * 2+1].get_size()[1] / 2
+            if shoot_result1==False :
+                if hero1.id != hero2.id :
+                    if image_counter % 20 < 10:
+                        x1=hero1.position[0]+hero1.attack_image[(hero1.id-1)*2].get_size()[0] / 2
+                        y1=hero1.position[1]+hero1.attack_image[(hero1.id-1)*2].get_size()[1] / 2
+                        x2=hero2.position[0]+hero2.attack_image[(hero1.id-1)*2].get_size()[0] / 2
+                        y2=hero2.position[1]+hero2.attack_image[(hero1.id-1)*2].get_size()[1] / 2
+                    else :
+                        x1 = hero1.position[0] + hero1.attack_image[(hero1.id - 1) * 2+1].get_size()[0] / 2
+                        y1 = hero1.position[1] + hero1.attack_image[(hero1.id - 1) * 2+1].get_size()[1] / 2
+                        x2 = hero2.position[0] + hero2.attack_image[(hero1.id - 1) * 2+1].get_size()[0] / 2
+                        y2 = hero2.position[1] + hero2.attack_image[(hero1.id - 1) * 2+1].get_size()[1] / 2
 
-                distance=((x1-x2)**2+(y1-y2)**2)**0.5
-                if distance/20<=hero1.range and (hero2.type in hero1.target) :
-                    if attacking_heros_in_game[heros_in_game.index(hero1)]==False:
-                        hero1.weapon_image[1] = hero1.position
-                        attacking_heros_in_game[heros_in_game.index(hero1)]=True
-                        target_heros_in_game[heros_in_game.index(hero2)].append(hero1)
-                        shoot(hero2.position , hero1.weapon_image , hero1 , hero2)
-                        window.blit(hero1.weapon_image[0], (hero1.weapon_image[1][0] - hero1.weapon_image[0].get_size()[0]/2 ,hero1.weapon_image[1][1] - hero1.weapon_image[0].get_size()[1]/2))
-                    else:
-                        attacking_heros_in_game[heros_in_game.index(hero1)] = True
-                        target_heros_in_game[heros_in_game.index(hero2)].append(hero1)
-                        shoot(hero2.position, hero1.weapon_image, hero1, hero2)
-                        window.blit(hero1.weapon_image[0], (hero1.weapon_image[1][0] - hero1.weapon_image[0].get_size()[0]/2 ,hero1.weapon_image[1][1] - hero1.weapon_image[0].get_size()[1]/2))
-                else :
-                    if attacking_heros_in_game[heros_in_game.index(hero1)]==True:
-                        if hero1 in target_heros_in_game[heros_in_game.index(hero2)]:
-                            attacking_heros_in_game[heros_in_game.index(hero1)]= False
-                            del target_heros_in_game[heros_in_game.index(hero2)][target_heros_in_game[heros_in_game.index(hero2)].index(hero1)]
+                    distance=((x1-x2)**2+(y1-y2)**2)**0.5
+                    if distance/20<=hero1.range and (hero2.type in hero1.target) :
+                        if attacking_heros_in_game[heros_in_game.index(hero1)]==False:
+                            hero1.weapon_image[1] = hero1.position
+                            attacking_heros_in_game[heros_in_game.index(hero1)]=True
+                            target_heros_in_game[heros_in_game.index(hero2)].append(hero1)
+                            shoot(hero2.position , hero1.weapon_image , hero1 , hero2)
+                            shoot_result1=True
+                            window.blit(hero1.weapon_image[0], (hero1.weapon_image[1][0] - hero1.weapon_image[0].get_size()[0]/2 ,hero1.weapon_image[1][1] - hero1.weapon_image[0].get_size()[1]/2))
+                        else:
+                            attacking_heros_in_game[heros_in_game.index(hero1)] = True
+                            target_heros_in_game[heros_in_game.index(hero2)].append(hero1)
+                            shoot(hero2.position, hero1.weapon_image, hero1, hero2)
+                            shoot_result1=True
+                            window.blit(hero1.weapon_image[0], (hero1.weapon_image[1][0] - hero1.weapon_image[0].get_size()[0]/2 ,hero1.weapon_image[1][1] - hero1.weapon_image[0].get_size()[1]/2))
+                    else :
+                        if attacking_heros_in_game[heros_in_game.index(hero1)]==True:
+                            if hero1 in target_heros_in_game[heros_in_game.index(hero2)]:
+                                attacking_heros_in_game[heros_in_game.index(hero1)]= False
+                                del target_heros_in_game[heros_in_game.index(hero2)][target_heros_in_game[heros_in_game.index(hero2)].index(hero1)]
 
-
+            else :
+                break
+        shoot_result2=False
         for tower in towers_in_game :
-            if hero1.id != tower.id :
-                if image_counter % 20 < 10:
-                    x1=hero1.position[0]+hero1.attack_image[(hero1.id-1)*2].get_size()[0] / 2
-                    y1=hero1.position[1]+hero1.attack_image[(hero1.id-1)*2].get_size()[1] / 2
-                    x2=tower.position[0]+tower.attack_image[(hero1.id-1)*2].get_size()[0] / 2
-                    y2=tower.position[1]+tower.attack_image[(hero1.id-1)*2].get_size()[1] / 2
-                else :
-                    x1 = hero1.position[0] + hero1.attack_image[(hero1.id - 1) * 2+1].get_size()[0] / 2
-                    y1 = hero1.position[1] + hero1.attack_image[(hero1.id - 1) * 2+1].get_size()[1] / 2
-                    x2 = tower.position[0] + tower.attack_image[(hero1.id - 1) * 2+1].get_size()[0] / 2
-                    y2 = tower.position[1] + tower.attack_image[(hero1.id - 1) * 2+1].get_size()[1] / 2
+            if shoot_result2==False :
+                if hero1.id != tower.id :
+                    if image_counter % 20 < 10:
+                        x1=hero1.position[0]+hero1.attack_image[(hero1.id-1)*2].get_size()[0] / 2
+                        y1=hero1.position[1]+hero1.attack_image[(hero1.id-1)*2].get_size()[1] / 2
+                        x2=tower.position[0]+tower.attack_image[(hero1.id-1)*2].get_size()[0] / 2
+                        y2=tower.position[1]+tower.attack_image[(hero1.id-1)*2].get_size()[1] / 2
+                    else :
+                        x1 = hero1.position[0] + hero1.attack_image[(hero1.id - 1) * 2+1].get_size()[0] / 2
+                        y1 = hero1.position[1] + hero1.attack_image[(hero1.id - 1) * 2+1].get_size()[1] / 2
+                        x2 = tower.position[0] + tower.attack_image[(hero1.id - 1) * 2+1].get_size()[0] / 2
+                        y2 = tower.position[1] + tower.attack_image[(hero1.id - 1) * 2+1].get_size()[1] / 2
 
-                distance=((x1-x2)**2+(y1-y2)**2)**0.5
-                if distance/20<=hero1.range and (tower.type in hero1.target) :
-                    if attacking_heros_in_game[heros_in_game.index(hero1)]==False:
-                        hero1.weapon_image[1] = hero1.position
-                        attacking_heros_in_game[heros_in_game.index(hero1)]=True
-                        target_towers_in_game[towers_in_game.index(tower)].append(hero1)
-                        shoot(tower.position , hero1.weapon_image , hero1 , tower)
-                        window.blit(hero1.weapon_image[0], (hero1.weapon_image[1][0] - hero1.weapon_image[0].get_size()[0]/2 ,
-                                                            hero1.weapon_image[1][1] - hero1.weapon_image[0].get_size()[1]/2))
+                    distance=((x1-x2)**2+(y1-y2)**2)**0.5
+                    if distance/20<=hero1.range and (tower.type in hero1.target) :
+                        if attacking_heros_in_game[heros_in_game.index(hero1)]==False:
+                            hero1.weapon_image[1] = hero1.position
+                            attacking_heros_in_game[heros_in_game.index(hero1)]=True
+                            target_towers_in_game[towers_in_game.index(tower)].append(hero1)
+                            shoot(tower.position , hero1.weapon_image , hero1 , tower)
+                            shoot_result2=True
+                            window.blit(hero1.weapon_image[0], (hero1.weapon_image[1][0] - hero1.weapon_image[0].get_size()[0]/2 ,
+                                                                hero1.weapon_image[1][1] - hero1.weapon_image[0].get_size()[1]/2))
+                        else:
+                            attacking_heros_in_game[heros_in_game.index(hero1)] = True
+                            target_towers_in_game[towers_in_game.index(tower)].append(hero1)
+                            shoot(tower.position, hero1.weapon_image, hero1, tower)
+                            shoot_result3=True
+                            window.blit(hero1.weapon_image[0], (hero1.weapon_image[1][0] - hero1.weapon_image[0].get_size()[0]/2 ,
+                                                                hero1.weapon_image[1][1] - hero1.weapon_image[0].get_size()[1]/2))
                     else:
-                        attacking_heros_in_game[heros_in_game.index(hero1)] = True
-                        target_towers_in_game[towers_in_game.index(tower)].append(hero1)
-                        shoot(tower.position, hero1.weapon_image, hero1, tower)
-                        window.blit(hero1.weapon_image[0], (hero1.weapon_image[1][0] - hero1.weapon_image[0].get_size()[0]/2 ,
-                                                            hero1.weapon_image[1][1] - hero1.weapon_image[0].get_size()[1]/2))
-                else:
-                    if attacking_heros_in_game[heros_in_game.index(hero1)] == True:
-                        if hero1 in target_towers_in_game[towers_in_game.index(tower)]:
-                            attacking_heros_in_game[heros_in_game.index(hero1)] = False
-                            del target_towers_in_game[towers_in_game.index(tower)][target_towers_in_game[towers_in_game.index(tower)].index(hero1)]
+                        if attacking_heros_in_game[heros_in_game.index(hero1)] == True:
+                            if hero1 in target_towers_in_game[towers_in_game.index(tower)]:
+                                attacking_heros_in_game[heros_in_game.index(hero1)] = False
+                                hero1.weapon_image[1] = hero1.position
+                                del target_towers_in_game[towers_in_game.index(tower)][target_towers_in_game[towers_in_game.index(tower)].index(hero1)]
 
+            else :
+                break
     for tower in towers_in_game :
+        shoot_result3=False
         for hero in heros_in_game :
-            if tower.id != hero.id :
-                if image_counter % 20 < 10:
-                    x1=tower.position[0]+tower.attack_image[(tower.id-1)*2].get_size()[0] / 2
-                    y1=tower.position[1]+tower.attack_image[(tower.id-1)*2].get_size()[1] / 2
-                    x2=hero.position[0]+hero.attack_image[(tower.id-1)*2].get_size()[0] / 2
-                    y2=hero.position[1]+hero.attack_image[(tower.id-1)*2].get_size()[1] / 2
-                else :
-                    x1 = tower.position[0] + tower.attack_image[(tower.id - 1) * 2+1].get_size()[0] / 2
-                    y1 = tower.position[1] + tower.attack_image[(tower.id - 1) * 2+1].get_size()[1] / 2
-                    x2 = hero.position[0] + hero.attack_image[(tower.id - 1) * 2+1].get_size()[0] / 2
-                    y2 = hero.position[1] + hero.attack_image[(tower.id - 1) * 2+1].get_size()[1] / 2
+            if shoot_result3==False :
+                if tower.id != hero.id :
+                    if image_counter % 20 < 10:
+                        x1=tower.position[0]+tower.attack_image[(tower.id-1)*2].get_size()[0] / 2
+                        y1=tower.position[1]+tower.attack_image[(tower.id-1)*2].get_size()[1] / 2
+                        x2=hero.position[0]+hero.attack_image[(tower.id-1)*2].get_size()[0] / 2
+                        y2=hero.position[1]+hero.attack_image[(tower.id-1)*2].get_size()[1] / 2
+                    else :
+                        x1 = tower.position[0] + tower.attack_image[(tower.id - 1) * 2+1].get_size()[0] / 2
+                        y1 = tower.position[1] + tower.attack_image[(tower.id - 1) * 2+1].get_size()[1] / 2
+                        x2 = hero.position[0] + hero.attack_image[(tower.id - 1) * 2+1].get_size()[0] / 2
+                        y2 = hero.position[1] + hero.attack_image[(tower.id - 1) * 2+1].get_size()[1] / 2
 
-                distance = ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
-                if distance / 20 <= tower.range and (hero.type in tower.target):
-                    if attacking_towers_in_game[towers_in_game.index(tower)] == False:
-                        tower.weapon_image[1] = tower.position
-                        attacking_towers_in_game[towers_in_game.index(tower)] = True
-                        target_heros_in_game[heros_in_game.index(hero)].append(tower)
-                        shoot2(hero.position, tower.weapon_image, tower, hero)
-                        window.blit(tower.weapon_image[0], (
-                        tower.weapon_image[1][0] - tower.weapon_image[0].get_size()[0] / 2,
-                        tower.weapon_image[1][1] - tower.weapon_image[0].get_size()[1] / 2))
+                    distance = ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
+                    if distance / 20 <= tower.range and (hero.type in tower.target):
+                        if attacking_towers_in_game[towers_in_game.index(tower)] == False:
+                            tower.weapon_image[1] = tower.position
+                            attacking_towers_in_game[towers_in_game.index(tower)] = True
+                            target_heros_in_game[heros_in_game.index(hero)].append(tower)
+                            shoot2(hero.position, tower.weapon_image, tower, hero)
+                            shoot_result3=True
+                            window.blit(tower.weapon_image[0], (
+                            tower.weapon_image[1][0] - tower.weapon_image[0].get_size()[0] / 2,
+                            tower.weapon_image[1][1] - tower.weapon_image[0].get_size()[1] / 2))
+                        else:
+                            attacking_towers_in_game[towers_in_game.index(tower)] = True
+                            target_heros_in_game[heros_in_game.index(hero)].append(tower)
+                            shoot2(hero.position, tower.weapon_image, tower, hero)
+                            shoot_result3=True
+                            window.blit(tower.weapon_image[0], (
+                            tower.weapon_image[1][0] - tower.weapon_image[0].get_size()[0] / 2,
+                            tower.weapon_image[1][1] - tower.weapon_image[0].get_size()[1] / 2))
                     else:
-                        attacking_towers_in_game[towers_in_game.index(tower)] = True
-                        target_heros_in_game[heros_in_game.index(hero)].append(tower)
-                        shoot2(hero.position, tower.weapon_image, tower, hero)
-                        window.blit(tower.weapon_image[0], (
-                        tower.weapon_image[1][0] - tower.weapon_image[0].get_size()[0] / 2,
-                        tower.weapon_image[1][1] - tower.weapon_image[0].get_size()[1] / 2))
-                else:
-                    if attacking_towers_in_game[towers_in_game.index(tower)] == True:
-                        if tower in target_heros_in_game[heros_in_game.index(hero)]:
-                            attacking_towers_in_game[towers_in_game.index(tower)] = False
-                            del target_heros_in_game[heros_in_game.index(hero)][
-                                target_heros_in_game[heros_in_game.index(hero)].index(tower)]
+                        if attacking_towers_in_game[towers_in_game.index(tower)] == True:
+                            if tower in target_heros_in_game[heros_in_game.index(hero)]:
+                                attacking_towers_in_game[towers_in_game.index(tower)] = False
+                                tower.weapon_image[1]=tower.position
+                                del target_heros_in_game[heros_in_game.index(hero)][
+                                    target_heros_in_game[heros_in_game.index(hero)].index(tower)]
+            else :
+                break
 
 
     for hero in heros_in_game:
@@ -1017,8 +1040,10 @@ def fire() :
             for i in target_heros_in_game[k]:
                 if i in heros_in_game :
                     attacking_heros_in_game[heros_in_game.index(i)]=False
+                    heros_in_game[heros_in_game.index(i)].weapon_image[1]=heros_in_game[heros_in_game.index(i)].position
                 if i in towers_in_game :
                     attacking_towers_in_game[towers_in_game.index(i)]=False
+                    towers_in_game[towers_in_game.index(i)].weapon_image[1]=towers_in_game[towers_in_game.index(i)].position
             del heros_in_game[k]
             del attacking_heros_in_game[k]
             del target_heros_in_game[k]
@@ -1028,6 +1053,8 @@ def fire() :
             for i in target_towers_in_game[k]:
                 if i in heros_in_game :
                     attacking_heros_in_game[heros_in_game.index(i)]=False
+                    heros_in_game[heros_in_game.index(i)].weapon_image[1]=heros_in_game[heros_in_game.index(i)].position
+
             destroyed_towers.append(towers_in_game[k])
             del towers_in_game[k]
             del attacking_towers_in_game[k]
@@ -1044,22 +1071,22 @@ def shoot2(target_position , weapon_image , tower , hero):
             hero.hit_point -= tower.damage
             attacking_towers_in_game[towers_in_game.index(tower)] = False
             weapon_image[1] = tower.position
-
+    print(hero)
     x1 = weapon_image[1][0]
     y1 = weapon_image[1][1]
     if x1 > target_position[0]:
-        if y1 > target_position[1] :
+        if y1 > target_position[1]:
             if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
                 x1 -= 5
-                try :
-                    y1 -= abs((target_position[1] - y1) / (target_position[0] - x1))*10
-                except :
+                try:
+                    y1 -= abs((target_position[1] - y1) / (target_position[0] - x1)) * 10
+                except:
                     y1 = weapon_image[1][1] - 10
-                if abs(weapon_image[1][1] - y1) > 10 :
+                if abs(weapon_image[1][1] - y1) > 10:
                     y1 = weapon_image[1][1] - 10
-                if abs(weapon_image[1][1] - y1) < 1 :
+                if abs(weapon_image[1][1] - y1) < 1:
                     y1 = weapon_image[1][1] - 1
-            else :
+            else:
                 y1 -= 5
                 try:
                     x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
@@ -1073,15 +1100,15 @@ def shoot2(target_position , weapon_image , tower , hero):
         else:
             if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
                 x1 -= 5
-                try :
-                    y1 += abs((target_position[1] - y1) / (target_position[0] - x1))*10
-                except :
+                try:
+                    y1 += abs((target_position[1] - y1) / (target_position[0] - x1)) * 10
+                except:
                     y1 = weapon_image[1][1] + 10
-                if abs(weapon_image[1][1] - y1) > 10 :
+                if abs(weapon_image[1][1] - y1) > 10:
                     y1 = weapon_image[1][1] + 10
-                if abs(weapon_image[1][1] - y1) < 1 :
+                if abs(weapon_image[1][1] - y1) < 1:
                     y1 = weapon_image[1][1] + 1
-            else :
+            else:
                 y1 += 5
                 try:
                     x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
@@ -1092,7 +1119,7 @@ def shoot2(target_position , weapon_image , tower , hero):
                 if abs(weapon_image[1][0] - x1) < 1:
                     x1 = weapon_image[1][x] - 1
 
-    elif y1 < target_position[1] :
+    elif y1 < target_position[1]:
         if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
             x1 += 5
             try:
@@ -1114,7 +1141,7 @@ def shoot2(target_position , weapon_image , tower , hero):
             if abs(weapon_image[1][0] - x1) < 1:
                 x1 = weapon_image[1][x] + 1
 
-    else :
+    else:
         if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
             x1 += 5
             try:
@@ -1135,8 +1162,7 @@ def shoot2(target_position , weapon_image , tower , hero):
                 x1 = weapon_image[1][0] + 10
             if abs(weapon_image[1][0] - x1) < 1:
                 x1 = weapon_image[1][x] + 1
-
-    weapon_image[1] = (x1 , y1)
+    weapon_image[1] = (x1, y1)
 
 
 def shoot(target_position , weapon_image , hero1 , hero2):
@@ -1248,6 +1274,33 @@ def show_towers():
         window.blit(i.destroyed_image,(i.position[0]-i.destroyed_image.get_size()[0]/2,i.position[1]-i.destroyed_image.get_size()[1]/2))
 
 
+def show_time():
+    font = pygame.font.SysFont("comicsansms", 32)
+    if GAME_TIME.get_ticks() <= 3*60*1000 :
+        game_time=str(2-GAME_TIME.get_ticks()//1000//60)+':'+str(60-GAME_TIME.get_ticks()//1000%60)
+        text = font.render(game_time, True, (255, 255, 255))
+        window.blit(text,(650 - text.get_width() // 2, 50 - text.get_height() // 2))
+    elif GAME_TIME.get_ticks() <= 4*60*1000:
+        game_time = str(3 - GAME_TIME.get_ticks() // 1000 // 60) + ':' + str(60 - GAME_TIME.get_ticks() // 1000 % 60)
+        text = font.render(game_time, True, (255, 255, 255))
+        window.blit(text, (650 - text.get_width() // 2, 50 - text.get_height() // 2))
+
+def show_elixir():
+    global elixirs_teem1, elixirs_teem2, last_elixir_given_time
+    if GAME_TIME.get_ticks() - last_elixir_given_time >= elixir_reload_time * 1000:
+        if elixirs_teem1 < 8:
+            elixirs_teem1 += 1
+        if elixirs_teem2 < 8:
+            elixirs_teem2 += 1
+        last_elixir_given_time = GAME_TIME.get_ticks()
+    if elixirs_teem1 <= 8:
+        window.blit(pygame.image.load('images\limo\\' + str(elixirs_teem1) + '.png'), (610, 100))
+    else:
+        window.blit(pygame.image.load('images\limo\8.png'), (610, 100))
+
+    font = pygame.font.SysFont("comicsansms", 32)
+    text1 = font.render(str(elixirs_teem1), True, (150, 0, 150))
+    window.blit(text1, (612 - text1.get_width() // 2, 148 - text1.get_height() // 2))
 
 
 def quit_game():
@@ -1262,6 +1315,10 @@ knight_card=pygame.image.load('images/KnightCard.png')
 pekka_card=pygame.image.load('images/MiniPEKKACard.png')
 mega_minion_card=pygame.image.load('images/MegaMinionCard.png')
 #variables
+last_elixir_given_time=0
+elixir_reload_time=2
+elixirs_teem1=0
+elixirs_teem2=0
 dictroop = {"Archer" :archer_card  , "Wizard" : wizard_card , "Giant" : giant_card
     , "Knight" : knight_card , "Mega_minion" : mega_minion_card , "Pekka" : pekka_card , "Balloon" : balloon_card }
 card_selected=[False,0]
@@ -1311,6 +1368,9 @@ while True :
         move()
     show_towers()
     show_heros_in_game(image_counter)
+    show_time()
+    show_elixir()
+
     for event in GAME_EVENTS.get():
         if event.type == GAME_GLOBALS.QUIT:
             quit_game()
