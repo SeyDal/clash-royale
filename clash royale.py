@@ -107,7 +107,7 @@ class Mega_minion(Hero):
             ,pygame.image.load('images/mega_minion_move_down1.png'),pygame.image.load('images/mega_minion_move_down2.png')]
         self.attack_image=[pygame.image.load('images/mega_minion_attack_up1.png'),pygame.image.load('images/mega_minion_attack_up2.png')
             ,pygame.image.load('images/mega_minion_attack_down1.png'),pygame.image.load('images/mega_minion_attack_down2.png')]
-        self.weapon_image = [pygame.image.load ("images/weapon.png") , self.position]
+        self.weapon_image = [pygame.image.load ("images/Megaminion_arrow.png") , self.position]
 
     #builging information
 class Building :
@@ -123,21 +123,21 @@ class Building :
 
 class King_tower (Building):
     def __init__(self,position,id,image):
-        Building.__init__(self,90,4500,1,7,"building",('air','ground','building'))
+        Building.__init__(self,90,4500,1,15,"building",('air','ground','building'))
         self.position=position
         self.image=[image,image,image,image]
         self.attack_image=[image,image,image,image]
-        self.weapon_image = [pygame.image.load ("images/Archer_arrow.png") , self.position]
+        self.weapon_image = [pygame.image.load ("images/King_tower_arrow.png") , self.position]
         self.id=id
 
 
 class Princess_tower (Building):
     def __init__(self,position,id,image):
-        Building.__init__(self,100,2800,0.8,7.5,"building",('air','ground','building'))
+        Building.__init__(self,100,2800,0.8,16,"building",('air','ground','building'))
         self.position=position
         self.image=[image,image,image,image]
         self.attack_image=[image,image,image,image]
-        self.weapon_image = [pygame.image.load ("images/Archer_arrow.png") , self.position]
+        self.weapon_image = [pygame.image.load ("images/Queen_tower_arrow.png") , self.position]
         self.id=id
 
 
@@ -146,7 +146,7 @@ class Princess_tower (Building):
 def draw_map():
     '''draw map of the game at the first of the main while loop'''
     global window
-    map_picture = pygame.image.load('images/field_2.jpg')
+    map_picture = pygame.image.load('images/field_3.jpg')
     window.fill((0,0,0))
     window.blit(map_picture,(0,0))
 
@@ -230,11 +230,10 @@ def drop_card():
 
 
 def move():
-
     global heros_in_game
     for i in heros_in_game:
-       # print(i.weapon_image[1])
-
+        k = 1
+        m = 10
         if attacking_heros_in_game[heros_in_game.index(i)]==False :
             X0 = i.position[0]
             Y0 = i.position[1]
@@ -244,105 +243,306 @@ def move():
                 if i.position[1] > 420 :
                     if X > 300:
                         if X > 510 :
-                            if X > 520 or X < 500:
-                                X -= 5
+                            if abs(X - bridge_down_right_position[0]) < abs(Y - bridge_down_right_position[1]):
+                                if X > 520 or X < 500:
+                                    X -= k
+                                try:
+                                    Y -= abs((bridge_down_right_position[1] - i.position[1]) / (
+                                            bridge_down_right_position[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) > 5.5 :
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) < 1 :
+                                    Y = Y0 - 1
+                            else:
+                                Y -= k
+                                try:
+                                    X -= abs((bridge_down_right_position[0] - i.position[0]) / (
+                                            bridge_down_right_position[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 - 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 - 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 - 1
+                        else:
+                            if abs(X - bridge_down_right_position[0]) < abs(Y - bridge_down_right_position[1]):
+                                if X > 520 or X < 500:
+                                    X += k
+                                try:
+                                    Y -= abs((bridge_down_right_position[1] - i.position[1]) / (
+                                            bridge_down_right_position[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) > 5.5 :
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) < 1 :
+                                    Y = Y0 - 1
+                            else:
+                                Y -= k
+                                try:
+                                    X += abs((bridge_down_right_position[0] - i.position[0]) / (
+                                            bridge_down_right_position[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 + 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 + 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 + 1
+                    elif X > 90:
+                        if abs(X - bridge_down_left_position[0]) < abs(Y - bridge_down_left_position[1]):
+                            if X > 100 or X < 80:
+                                X -= k
                             try:
-                                Y -= abs((bridge_down_right_position[1] - i.position[1]) / (
-                                        bridge_down_right_position[0] - i.position[0])) * 5
+                                Y -= abs((bridge_down_left_position[1] - i.position[1]) / (
+                                        bridge_down_left_position[0] - i.position[0])) * m
                             except ZeroDivisionError:
                                 Y = Y0 - 5
-                            if abs(Y - Y0) > 5.5 :
+                            if abs(Y - Y0) > 5.5:
                                 Y = Y0 - 5
-                            if abs(Y - Y0) < 1 :
+                            if abs(Y - Y0) < 1:
                                 Y = Y0 - 1
                         else:
-                            if X > 520 or X < 500:
-                                X += 5
+                            Y -= k
                             try:
-                                Y -= abs((bridge_down_right_position[1] - i.position[1]) / (
-                                        bridge_down_right_position[0] - i.position[0])) * 5
-                            except:
-                                Y = Y0 - 5
-                            if abs(Y - Y0) > 5.5 :
-                                Y = Y0 - 5
-                            if abs(Y - Y0) < 1 :
-                                Y = Y0 - 1
-                    elif X > 90:
-                        if X > 100 or X < 80:
-                            X -= 5
-                        try:
-                            Y -= abs((bridge_down_left_position[1] - i.position[1]) / (
-                                    bridge_down_left_position[0] - i.position[0])) * 5
-                        except:
-                            Y = Y0 - 5
-                        if abs(Y - Y0) > 5.5:
-                            Y = Y0 - 5
-                        if abs(Y - Y0) < 1:
-                            Y = Y0 - 1
+                                X -= abs((bridge_down_left_position[0] - i.position[0]) / (
+                                        bridge_down_left_position[1] - i.position[1])) * m
+                            except ZeroDivisionError:
+                                X = X0 - 5
+                            if abs(X - X0) > 5.5:
+                                X = X0 - 5
+                            if abs(Y - Y0) < 1:
+                                X = X0 - 1
                     else:
-                        if X > 100 or X < 80:
-                            X += 5
-                        try:
-                            Y -= abs((bridge_down_left_position[1] - i.position[1]) / (
-                                    bridge_down_left_position[0] - i.position[0])) * 5
-                        except:
-                            Y = Y0 - 5
-                        if abs(Y - Y0) > 5.5:
-                            Y = Y0 - 5
-                        if abs(Y - Y0) < 1:
-                            Y = Y0 - 1
+                        if abs(X - bridge_down_left_position[0]) < abs(Y - bridge_down_left_position[1]):
+                            if X > 100 or X < 80:
+                                X += k
+                            try:
+                                Y -= abs((bridge_down_left_position[1] - i.position[1]) / (
+                                        bridge_down_left_position[0] - i.position[0])) * m
+                            except ZeroDivisionError:
+                                Y = Y0 - 5
+                            if abs(Y - Y0) > 5.5:
+                                Y = Y0 - 5
+                            if abs(Y - Y0) < 1:
+                                Y = Y0 - 1
+                        else:
+                            Y -= k
+                            try:
+                                X += abs((bridge_down_left_position[0] - i.position[0]) / (
+                                        bridge_down_left_position[1] - i.position[1])) * m
+                            except ZeroDivisionError:
+                                X = X0 + 5
+                            if abs(X - X0) > 5.5:
+                                X = X0 + 5
+                            if abs(Y - Y0) < 1:
+                                X = X0 + 1
 
 
                 else:
+                    print(i.position)
                     if X > 300 :
+                        print(destroyed_towers)
+                        print(towers[1].position, 5555)
                         if X > 510:
-                            if X > 520 or X < 500 :
-                                X -= 5
-                            try:
-                                Y -= abs((QueenTower_up_right_position[1] - i.position[1]) / (
-                                        QueenTower_up_right_position[0] - i.position[0]))*5
-                            except:
-                                Y = Y0 - 5
-                            if abs(Y - Y0) > 5.5:
-                                Y = Y0 - 5
-                            if abs(Y - Y0) < 1 :
-                                Y = Y0 - 1
+                            if towers[1] not in destroyed_towers :
+                                if abs(X - QueenTower_up_right_position[0]) < abs(Y - QueenTower_up_right_position[1]) :
+                                    if X > 520 or X < 500:
+                                        X -= k
+                                    try:
+                                        Y -= abs((QueenTower_up_right_position[1] - i.position[1]) / (
+                                                QueenTower_up_right_position[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 - 1
+                                else:
+                                    Y -= k
+                                    try:
+                                        X -= abs((QueenTower_up_right_position[0] - i.position[0]) / (
+                                                QueenTower_up_right_position[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 - 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 - 1
+
+                            else:
+                                if abs(X - King_tower_up[0]) < abs(Y - King_tower_up[1]):
+                                    if X > 310 or X < 290:
+                                        X -= k
+                                    try:
+                                        Y -= abs((King_tower_up[1] - i.position[1]) / (
+                                                King_tower_up[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 - 1
+                                else:
+                                    Y -= k
+                                    try:
+                                        X -= abs((King_tower_up[0] - i.position[0]) / (
+                                                King_tower_up[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 - 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 - 1
                         else:
-                            if X > 520 or X < 500:
-                                X += 5
-                            try:
-                                Y -= abs((QueenTower_up_right_position[1] - i.position[1]) / (
-                                        QueenTower_up_right_position[0] - i.position[0]))*5
-                            except:
-                                Y = Y0 - 5
-                            if abs(Y - Y0) > 5.5:
-                                Y = Y0 - 5
-                            if abs(Y - Y0) < 1 :
-                                Y = Y0 - 1
+                            if towers[1] not in destroyed_towers :
+                                if abs(X - QueenTower_up_right_position[0]) < abs(Y - QueenTower_up_right_position[1]):
+                                    X += k
+                                    try:
+                                        Y -= abs((QueenTower_up_right_position[1] - i.position[1]) / (
+                                                QueenTower_up_right_position[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 - 1
+                                else:
+                                    Y -= k
+                                    try:
+                                        X += abs((QueenTower_up_right_position[0] - i.position[0]) / (
+                                                QueenTower_up_right_position[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 + 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 + 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 + 1
+                            else:
+                                if X > 310 or X < 290:
+                                    if abs(X - King_tower_up[0]) < abs(Y - King_tower_up[1]):
+                                        X -= k
+                                        try:
+                                            Y -= abs((King_tower_up[1] - i.position[1]) / (
+                                                    King_tower_up[0] - i.position[0])) * m
+                                        except ZeroDivisionError:
+                                            Y = Y0 - 5
+                                        if abs(Y - Y0) > 5.5:
+                                            Y = Y0 - 5
+                                        if abs(Y - Y0) < 1:
+                                            Y = Y0 - 1
+                                    else:
+                                        Y -= k
+                                        try:
+                                            X -= abs((King_tower_up[0] - i.position[0]) / (
+                                                    King_tower_up[1] - i.position[1])) * m
+                                        except ZeroDivisionError:
+                                            X = X0 - 5
+                                        if abs(X - X0) > 5.5:
+                                            X = X0 - 5
+                                        if abs(Y - Y0) < 1:
+                                            X = X0 - 1
                     elif X > 90:
-                        if X > 100 or X < 80:
-                            X -= 5
-                        try:
-                            Y -= abs((QueenTower_up_lef_position[1] - i.position[1]) / (
-                                    QueenTower_up_lef_position[0] - i.position[0]))*5
-                        except:
-                            Y = Y0 - 5
-                        if abs(Y - Y0) > 5.5:
-                            Y = Y0 - 5
-                        if abs(Y - Y0) < 1:
-                            Y = Y0 - 1
+                        if towers[0] not in destroyed_towers:
+                            if X > 100 or X < 80:
+                                if abs(X - QueenTower_up_left_position[0]) < abs(Y - QueenTower_up_left_position[1]):
+                                    X -= k
+                                    try:
+                                        Y -= abs((QueenTower_up_left_position[1] - i.position[1]) / (
+                                                QueenTower_up_left_position[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 - 1
+                                else:
+                                    Y -= k
+                                    try:
+                                        X -= abs((QueenTower_up_left_position[0] - i.position[0]) / (
+                                                QueenTower_up_left_position[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 - 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 - 1
+                        else:
+                            if abs(X - King_tower_up[0]) < abs(Y - King_tower_up[1]):
+                                if X > 310 or X < 290:
+                                    X += k
+                                try:
+                                    Y -= abs((King_tower_up[1] - i.position[1]) / (
+                                            King_tower_up[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 - 1
+                            else:
+                                Y -= k
+                                try:
+                                    X += abs((King_tower_up[0] - i.position[0]) / (
+                                            King_tower_up[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 + 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 + 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 + 1
+
                     else:
-                        if X > 100 or X < 80:
-                            X += 5
-                        try:
-                            Y -= abs((QueenTower_up_lef_position[1] - i.position[1]) / (
-                                    QueenTower_up_lef_position[0] - i.position[0]))*5
-                        except:
-                            Y = Y0 - 5
-                        if abs(Y - Y0) > 5.5:
-                            Y = Y0 - 5
-                        if abs(Y - Y0) < 1:
-                            Y = Y0 - 1
+                        if towers[0] not in destroyed_towers:
+                            if abs(X - QueenTower_up_left_position[0]) < abs(Y - QueenTower_up_left_position[1]):
+                                if X > 100 or X < 80:
+                                    X += k
+                                try:
+                                    Y -= abs((QueenTower_up_left_position[1] - i.position[1]) / (
+                                            QueenTower_up_left_position[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 - 1
+                            else:
+                                Y -= k
+                                try:
+                                    X += abs((QueenTower_up_left_position[0] - i.position[0]) / (
+                                            QueenTower_up_left_position[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 + 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 + 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 + 1
+                        else:
+                            if abs(X - King_tower_up[0]) < abs(Y - King_tower_up[1]):
+                                if X > 310 or X < 290:
+                                    X += k
+                                try:
+                                    Y -= abs((King_tower_up[1] - i.position[1]) / (
+                                            King_tower_up[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 - 1
+                            else:
+                                Y -= k
+                                try:
+                                    X += abs((King_tower_up[0] - i.position[0]) / (
+                                            King_tower_up[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 + 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 + 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 + 1
+
                 i.position = (X, Y)
 
 
@@ -351,112 +551,313 @@ def move():
                 Y0 = i.position[1]
                 X = X0
                 Y = Y0
-                if i.position[1] < 370 :
+                if i.position[1] < 380 :
                     if X > 300:
-                        if X > 510:
-                            if X > 520 or X < 500:
-                                X -= 5
+                        if X > 510 :
+                            if abs(X - bridge_up_right_position[0]) < abs(Y - bridge_up_right_position[1]):
+                                if X > 520 or X < 500:
+                                    X -= k
+                                try:
+                                    Y += abs((bridge_up_right_position[1] - i.position[1]) / (
+                                            bridge_up_right_position[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) > 5.5 :
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) < 1 :
+                                    Y = Y0 + 1
+                            else:
+                                Y += k
+                                try:
+                                    X -= abs((bridge_up_right_position[0] - i.position[0]) / (
+                                            bridge_up_right_position[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 - 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 - 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 - 1
+                        else:
+                            if abs(X - bridge_up_right_position[0]) < abs(Y - bridge_up_right_position[1]):
+                                if X > 520 or X < 500:
+                                    X += k
+                                try:
+                                    Y += abs((bridge_up_right_position[1] - i.position[1]) / (
+                                            bridge_up_right_position[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) > 5.5 :
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) < 1 :
+                                    Y = Y0 + 1
+                            else:
+                                Y += k
+                                try:
+                                    X += abs((bridge_down_right_position[0] - i.position[0]) / (
+                                            bridge_down_right_position[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 + 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 + 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 + 1
+                    elif X > 90:
+                        if abs(X - bridge_up_left_position[0]) < abs(Y - bridge_up_left_position[1]):
+                            if X > 100 or X < 80:
+                                X -= k
                             try:
-                                Y += abs((bridge_up_right_position[1] - i.position[1]) / (
-                                        bridge_up_right_position[0] - i.position[0])) * 5
+                                Y += abs((bridge_up_left_position[1] - i.position[1]) / (
+                                        bridge_up_left_position[0] - i.position[0])) * m
                             except ZeroDivisionError:
                                 Y = Y0 + 5
                             if abs(Y - Y0) > 5.5:
                                 Y = Y0 + 5
-                            if abs(Y - Y0) < 1 :
+                            if abs(Y - Y0) < 1:
                                 Y = Y0 + 1
                         else:
-                            if X > 520 or X < 500:
-                                X += 5
+                            Y += k
                             try:
-                                Y += abs((bridge_up_right_position[1] - i.position[1]) / (
-                                        bridge_up_right_position[0] - i.position[0])) * 5
-                            except:
+                                X -= abs((bridge_up_left_position[0] - i.position[0]) / (
+                                        bridge_up_left_position[1] - i.position[1])) * m
+                            except ZeroDivisionError:
+                                X = X0 - 5
+                            if abs(X - X0) > 5.5:
+                                X = X0 - 5
+                            if abs(Y - Y0) < 1:
+                                X = X0 - 1
+                    else:
+                        print(X,Y)
+                        if abs(X - bridge_up_left_position[0]) < abs(Y - bridge_up_left_position[1]):
+                            if X > 100 or X < 80:
+                                X += k
+                            try:
+                                Y += abs((bridge_up_left_position[1] - i.position[1]) / (
+                                        bridge_up_left_position[0] - i.position[0])) * m
+                            except ZeroDivisionError:
                                 Y = Y0 + 5
                             if abs(Y - Y0) > 5.5:
                                 Y = Y0 + 5
-                            if abs(Y - Y0) < 1 :
+                            if abs(Y - Y0) < 1:
                                 Y = Y0 + 1
-                    elif X > 90:
-                        if X > 100 or X < 80:
-                            X -= 5
-                        try:
-                            Y += abs((bridge_up_left_position[1] - i.position[1]) / (
-                                    bridge_up_left_position[0] - i.position[0])) * 5
-                        except:
-                            Y = Y0 + 5
-                        if abs(Y - Y0) > 5.5:
-                            Y = Y0 + 5
-                        if abs(Y - Y0) < 1:
-                            Y = Y0 + 1
-                    else:
-                        if X > 100 or X < 80:
-                            X += 5
-                        try:
-                            Y += abs((bridge_up_left_position[1] - i.position[1]) / (
-                                    bridge_up_left_position[0] - i.position[0])) * 5
-                        except:
-                            Y = Y0 + 5
-                        if abs(Y - Y0) > 5.5:
-                            Y = Y0 + 5
-                        if abs(Y - Y0) < 1:
-                            Y = Y0 + 1
-
+                        else:
+                            Y += k
+                            try:
+                                X += abs((bridge_up_left_position[0] - i.position[0]) / (
+                                        bridge_up_left_position[1] - i.position[1])) * m
+                            except ZeroDivisionError:
+                                X = X0 + 5
+                            if abs(X - X0) > 5.5:
+                                X = X0 + 5
+                            if abs(Y - Y0) < 1:
+                                X = X0 + 1
+                        print(X,Y)
+                        print(564516514651)
 
                 else:
-                    if X > 300:
+                    print(i.position)
+                    if X > 300 :
+                        print(destroyed_towers)
+                        print(towers[1].position, 5555)
                         if X > 510:
-                            if X > 520 or X < 500:
-                                X -= 5
-                            try:
-                                Y += abs((QueenTower_down_right_position[1] - i.position[1]) / (
-                                        QueenTower_down_right_position[0] - i.position[0]))*5
-                            except:
-                                Y = Y0 + 5
-                            if abs(Y - Y0) > 5.5:
-                                Y = Y0 + 5
-                            if abs(Y - Y0) < 1 :
-                                Y = Y0 + 1
+                            if towers[3] not in destroyed_towers :
+                                if abs(X - QueenTower_down_right_position[0]) < abs(Y - QueenTower_down_right_position[1]) :
+                                    if X > 520 or X < 500:
+                                        X -= k
+                                    try:
+                                        Y += abs((QueenTower_down_right_position[1] - i.position[1]) / (
+                                                QueenTower_down_right_position[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 + 1
+                                else:
+                                    Y += k
+                                    try:
+                                        X -= abs((QueenTower_down_right_position[0] - i.position[0]) / (
+                                                QueenTower_down_right_position[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 - 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 - 1
 
+                            else:
+                                if abs(X - King_tower_down[0]) < abs(Y - King_tower_down[1]):
+                                    if X > 310 or X < 290:
+                                        X -= k
+                                    try:
+                                        Y += abs((King_tower_up[1] - i.position[1]) / (
+                                                King_tower_up[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 + 1
+                                else:
+                                    Y += k
+                                    try:
+                                        X -= abs((King_tower_up[0] - i.position[0]) / (
+                                                King_tower_up[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 - 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 - 1
                         else:
-                            if X > 520 or X < 500:
-                                X += 5
-                            try:
-                                Y += abs((QueenTower_down_right_position[1] - i.position[1]) / (
-                                        QueenTower_down_right_position[0] - i.position[0]))*5
-                            except:
-                                Y = Y0 + 5
-                            if abs(Y - Y0) > 5.5:
-                                Y = Y0 + 5
-                            if abs(Y - Y0) < 1 :
-                                Y = Y0 + 1
-
+                            if towers[3] not in destroyed_towers :
+                                if abs(X - QueenTower_down_right_position[0]) < abs(Y - QueenTower_down_right_position[1]):
+                                    X += k
+                                    try:
+                                        Y += abs((QueenTower_down_right_position[1] - i.position[1]) / (
+                                                QueenTower_down_right_position[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 + 1
+                                else:
+                                    Y += k
+                                    try:
+                                        X += abs((QueenTower_down_right_position[0] - i.position[0]) / (
+                                                QueenTower_down_right_position[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 + 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 + 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 + 1
+                            else:
+                                if X > 310 or X < 290:
+                                    if abs(X - King_tower_down[0]) < abs(Y - King_tower_down[1]):
+                                        X -= k
+                                        try:
+                                            Y += abs((King_tower_down[1] - i.position[1]) / (
+                                                    King_tower_down[0] - i.position[0])) * m
+                                        except ZeroDivisionError:
+                                            Y = Y0 + 5
+                                        if abs(Y - Y0) > 5.5:
+                                            Y = Y0 + 5
+                                        if abs(Y - Y0) < 1:
+                                            Y = Y0 + 1
+                                    else:
+                                        Y += k
+                                        try:
+                                            X -= abs((King_tower_down[0] - i.position[0]) / (
+                                                    King_tower_down[1] - i.position[1])) * m
+                                        except ZeroDivisionError:
+                                            X = X0 - 5
+                                        if abs(X - X0) > 5.5:
+                                            X = X0 - 5
+                                        if abs(Y - Y0) < 1:
+                                            X = X0 - 1
                     elif X > 90:
-                        if X > 100 or X < 80:
-                            X -= 5
-                        try:
-                            Y += abs((QueenTower_down_lef_position[1] - i.position[1]) / (
-                                    QueenTower_down_lef_position[0] - i.position[0]))*5
-                        except:
-                            Y = Y0 + 5
-                        if abs(Y - Y0) > 5.5:
-                            Y = Y0 + 5
-                        if abs(Y - Y0) < 1:
-                            Y = Y0 + 1
-                    else:
-                        if X > 100 or X < 80:
-                            X += 5
-                        try:
-                            Y += abs((QueenTower_down_lef_position[1] - i.position[1]) / (
-                                    QueenTower_down_lef_position[0] - i.position[0]))*5
-                        except:
-                            Y = Y0 + 5
-                        if abs(Y - Y0) > 5.5:
-                            Y = Y0 + 5
-                        if abs(Y - Y0) < 1:
-                            Y = Y0 + 1
+                        if towers[2] not in destroyed_towers:
+                            if abs(X - QueenTower_down_left_position[0]) < abs(Y - QueenTower_down_left_position[1]):
+                                if X > 100 or X < 80:
+                                    X -= k
+                                try:
+                                    Y += abs((QueenTower_down_left_position[1] - i.position[1]) / (
+                                            QueenTower_down_left_position[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 + 1
+                            else:
+                                Y += k
+                                try:
+                                    X -= abs((QueenTower_down_left_position[0] - i.position[0]) / (
+                                            QueenTower_down_left_position[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 - 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 - 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 - 1
+                        else:
+                            if abs(X - King_tower_down[0]) < abs(Y - King_tower_down[1]):
+                                if X > 310 or X < 290:
+                                    X += k
+                                try:
+                                    Y += abs((King_tower_down[1] - i.position[1]) / (
+                                            King_tower_down[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 + 1
+                            else:
+                                Y += k
+                                try:
+                                    X += abs((King_tower_down[0] - i.position[0]) / (
+                                            King_tower_down[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 + 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 + 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 + 1
 
-            i.position = (X, Y)
+                    else:
+                        if towers[2] not in destroyed_towers:
+                            if abs(X - QueenTower_down_left_position[0]) < abs(Y - QueenTower_down_left_position[1]):
+                                if X > 100 or X < 80:
+                                    X += k
+                                try:
+                                    Y += abs((QueenTower_down_left_position[1] - i.position[1]) / (
+                                            QueenTower_down_left_position[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 + 1
+                            else:
+                                Y += k
+                                try:
+                                    X += abs((QueenTower_down_left_position[0] - i.position[0]) / (
+                                            QueenTower_down_left_position[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 + 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 + 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 + 1
+                        else:
+                            if abs(X - King_tower_down[0]) < abs(Y - King_tower_down[1]):
+                                if X > 310 or X < 290:
+                                    X += k
+                                try:
+                                    Y += abs((King_tower_down[1] - i.position[1]) / (
+                                            King_tower_down[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 + 1
+                            else:
+                                Y += k
+                                try:
+                                    X += abs((King_tower_down[0] - i.position[0]) / (
+                                            King_tower_down[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 + 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 + 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 + 1
+                i.position = (X, Y)
+
+
 
 
 
@@ -590,14 +991,14 @@ def fire() :
                     if attacking_towers_in_game[towers_in_game.index(tower)] == False:
                         tower.weapon_image[1] = tower.position
                         attacking_towers_in_game[towers_in_game.index(tower)] = True
-                        target_towers_in_game[heros_in_game.index(hero)].append(tower)
+                        target_heros_in_game[heros_in_game.index(hero)].append(tower)
                         shoot2(hero.position, tower.weapon_image, tower, hero)
                         window.blit(tower.weapon_image[0], (
                         tower.weapon_image[1][0] - tower.weapon_image[0].get_size()[0] / 2,
                         tower.weapon_image[1][1] - tower.weapon_image[0].get_size()[1] / 2))
                     else:
                         attacking_towers_in_game[towers_in_game.index(tower)] = True
-                        target_towers_in_game[heros_in_game.index(hero)].append(tower)
+                        target_heros_in_game[heros_in_game.index(hero)].append(tower)
                         shoot2(hero.position, tower.weapon_image, tower, hero)
                         window.blit(tower.weapon_image[0], (
                         tower.weapon_image[1][0] - tower.weapon_image[0].get_size()[0] / 2,
@@ -620,6 +1021,7 @@ def fire() :
                     attacking_towers_in_game[towers_in_game.index(i)]=False
             del heros_in_game[k]
             del attacking_heros_in_game[k]
+            del target_heros_in_game[k]
     for tower in towers_in_game :
         if tower.hit_point <= 0 :
             k=towers_in_game.index(tower)
@@ -629,6 +1031,7 @@ def fire() :
             destroyed_towers.append(towers_in_game[k])
             del towers_in_game[k]
             del attacking_towers_in_game[k]
+            del target_towers_in_game[k]
 
 
 
@@ -646,37 +1049,93 @@ def shoot2(target_position , weapon_image , tower , hero):
     y1 = weapon_image[1][1]
     if x1 > target_position[0]:
         if y1 > target_position[1] :
-            x1 -= 1
-            try :
-                y1 -= abs((target_position[1] - y1) / (target_position[0] - x1))
-            except :
-                y1 = weapon_image[1][1] - 10
-            if abs(weapon_image[1][1] - y1) > 10 :
-                y1 = weapon_image[1][1] - 10
+            if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
+                x1 -= 5
+                try :
+                    y1 -= abs((target_position[1] - y1) / (target_position[0] - x1))*10
+                except :
+                    y1 = weapon_image[1][1] - 10
+                if abs(weapon_image[1][1] - y1) > 10 :
+                    y1 = weapon_image[1][1] - 10
+                if abs(weapon_image[1][1] - y1) < 1 :
+                    y1 = weapon_image[1][1] - 1
+            else :
+                y1 -= 5
+                try:
+                    x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+                except:
+                    x1 = weapon_image[1][0] - 10
+                if abs(weapon_image[1][0] - x1) > 10:
+                    x1 = weapon_image[1][0] - 10
+                if abs(weapon_image[1][0] - x1) < 1:
+                    x1 = weapon_image[1][x] - 1
+
         else:
-            x1 -= 1
-            try :
-                y1 += abs((target_position[1] - y1) / (target_position[0] - x1))
-            except :
-                y1 = weapon_image[1][1] + 10
-            if abs(weapon_image[1][1] - y1) > 10 :
-                y1 = weapon_image[1][1] + 10
+            if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
+                x1 -= 5
+                try :
+                    y1 += abs((target_position[1] - y1) / (target_position[0] - x1))*10
+                except :
+                    y1 = weapon_image[1][1] + 10
+                if abs(weapon_image[1][1] - y1) > 10 :
+                    y1 = weapon_image[1][1] + 10
+                if abs(weapon_image[1][1] - y1) < 1 :
+                    y1 = weapon_image[1][1] + 1
+            else :
+                y1 += 5
+                try:
+                    x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+                except:
+                    x1 = weapon_image[1][0] - 10
+                if abs(weapon_image[1][0] - x1) > 10:
+                    x1 = weapon_image[1][0] - 10
+                if abs(weapon_image[1][0] - x1) < 1:
+                    x1 = weapon_image[1][x] - 1
+
     elif y1 < target_position[1] :
-        x1 += 1
-        try:
-            y1 += abs((target_position[1] - y1) / (target_position[0] - x1))
-        except:
-            y1 = weapon_image[1][1] + 10
-        if abs(weapon_image[1][1] - y1) > 10:
-            y1 = weapon_image[1][1] + 10
+        if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
+            x1 += 5
+            try:
+                y1 += abs((target_position[1] - y1) / (target_position[0] - x1)) * 10
+            except:
+                y1 = weapon_image[1][1] + 10
+            if abs(weapon_image[1][1] - y1) > 10:
+                y1 = weapon_image[1][1] + 10
+            if abs(weapon_image[1][1] - y1) < 1:
+                y1 = weapon_image[1][1] + 1
+        else:
+            y1 += 5
+            try:
+                x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+            except:
+                x1 = weapon_image[1][0] + 10
+            if abs(weapon_image[1][0] - x1) > 10:
+                x1 = weapon_image[1][0] + 10
+            if abs(weapon_image[1][0] - x1) < 1:
+                x1 = weapon_image[1][x] + 1
+
     else :
-        x1 += 1
-        try:
-            y1 -= abs((target_position[1] - y1) / (target_position[0] - x1))
-        except:
-            y1 = weapon_image[1][1] - 10
-        if abs(weapon_image[1][1] - y1) > 10:
-            y1 = weapon_image[1][1] - 10
+        if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
+            x1 += 5
+            try:
+                y1 -= abs((target_position[1] - y1) / (target_position[0] - x1)) * 10
+            except:
+                y1 = weapon_image[1][1] - 10
+            if abs(weapon_image[1][1] - y1) > 10:
+                y1 = weapon_image[1][1] - 10
+            if abs(weapon_image[1][1] - y1) < 1:
+                y1 = weapon_image[1][1] - 1
+        else:
+            y1 -= 5
+            try:
+                x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+            except:
+                x1 = weapon_image[1][0] + 10
+            if abs(weapon_image[1][0] - x1) > 10:
+                x1 = weapon_image[1][0] + 10
+            if abs(weapon_image[1][0] - x1) < 1:
+                x1 = weapon_image[1][x] + 1
+
     weapon_image[1] = (x1 , y1)
 
 
@@ -691,37 +1150,92 @@ def shoot(target_position , weapon_image , hero1 , hero2):
     y1 = weapon_image[1][1]
     if x1 > target_position[0]:
         if y1 > target_position[1] :
-            x1 -= 1
-            try :
-                y1 -= abs((target_position[1] - y1) / (target_position[0] - x1))
-            except :
-                y1 = weapon_image[1][1] - 10
-            if abs(weapon_image[1][1] - y1) > 10 :
-                y1 = weapon_image[1][1] - 10
+            if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
+                x1 -= 5
+                try :
+                    y1 -= abs((target_position[1] - y1) / (target_position[0] - x1))*10
+                except :
+                    y1 = weapon_image[1][1] - 10
+                if abs(weapon_image[1][1] - y1) > 10 :
+                    y1 = weapon_image[1][1] - 10
+                if abs(weapon_image[1][1] - y1) < 1 :
+                    y1 = weapon_image[1][1] - 1
+            else :
+                y1 -= 5
+                try:
+                    x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+                except:
+                    x1 = weapon_image[1][0] - 10
+                if abs(weapon_image[1][0] - x1) > 10:
+                    x1 = weapon_image[1][0] - 10
+                if abs(weapon_image[1][0] - x1) < 1:
+                    x1 = weapon_image[1][x] - 1
+
         else:
-            x1 -= 1
-            try :
-                y1 += abs((target_position[1] - y1) / (target_position[0] - x1))
-            except :
-                y1 = weapon_image[1][1] + 10
-            if abs(weapon_image[1][1] - y1) > 10 :
-                y1 = weapon_image[1][1] + 10
+            if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
+                x1 -= 5
+                try :
+                    y1 += abs((target_position[1] - y1) / (target_position[0] - x1))*10
+                except :
+                    y1 = weapon_image[1][1] + 10
+                if abs(weapon_image[1][1] - y1) > 10 :
+                    y1 = weapon_image[1][1] + 10
+                if abs(weapon_image[1][1] - y1) < 1 :
+                    y1 = weapon_image[1][1] + 1
+            else :
+                y1 += 5
+                try:
+                    x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+                except:
+                    x1 = weapon_image[1][0] - 10
+                if abs(weapon_image[1][0] - x1) > 10:
+                    x1 = weapon_image[1][0] - 10
+                if abs(weapon_image[1][0] - x1) < 1:
+                    x1 = weapon_image[1][x] - 1
+
     elif y1 < target_position[1] :
-        x1 += 1
-        try:
-            y1 += abs((target_position[1] - y1) / (target_position[0] - x1))
-        except:
-            y1 = weapon_image[1][1] + 10
-        if abs(weapon_image[1][1] - y1) > 10:
-            y1 = weapon_image[1][1] + 10
+        if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
+            x1 += 5
+            try:
+                y1 += abs((target_position[1] - y1) / (target_position[0] - x1)) * 10
+            except:
+                y1 = weapon_image[1][1] + 10
+            if abs(weapon_image[1][1] - y1) > 10:
+                y1 = weapon_image[1][1] + 10
+            if abs(weapon_image[1][1] - y1) < 1:
+                y1 = weapon_image[1][1] + 1
+        else:
+            y1 += 5
+            try:
+                x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+            except:
+                x1 = weapon_image[1][0] + 10
+            if abs(weapon_image[1][0] - x1) > 10:
+                x1 = weapon_image[1][0] + 10
+            if abs(weapon_image[1][0] - x1) < 1:
+                x1 = weapon_image[1][x] + 1
+
     else :
-        x1 += 1
-        try:
-            y1 -= abs((target_position[1] - y1) / (target_position[0] - x1))
-        except:
-            y1 = weapon_image[1][1] - 10
-        if abs(weapon_image[1][1] - y1) > 10:
-            y1 = weapon_image[1][1] - 10
+        if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
+            x1 += 5
+            try:
+                y1 -= abs((target_position[1] - y1) / (target_position[0] - x1)) * 10
+            except:
+                y1 = weapon_image[1][1] - 10
+            if abs(weapon_image[1][1] - y1) > 10:
+                y1 = weapon_image[1][1] - 10
+            if abs(weapon_image[1][1] - y1) < 1:
+                y1 = weapon_image[1][1] - 1
+        else:
+            y1 -= 5
+            try:
+                x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+            except:
+                x1 = weapon_image[1][0] + 10
+            if abs(weapon_image[1][0] - x1) > 10:
+                x1 = weapon_image[1][0] + 10
+            if abs(weapon_image[1][0] - x1) < 1:
+                x1 = weapon_image[1][x] + 1
     weapon_image[1] = (x1 , y1)
 
 
@@ -757,6 +1271,7 @@ target_heros_in_game=[[],[]]
 towers_in_game=[Princess_tower((10+75,20+75),2,pygame.image.load('images\Queen_tower_up.png')),Princess_tower((430+75,20+75),2,pygame.image.load('images\Queen_tower_up.png')),
                 Princess_tower((10+75, 650+75), 1, pygame.image.load('images\Queen_tower_down.png')),Princess_tower((430+75,650+75),1,pygame.image.load('images\Queen_tower_down.png')),
                 King_tower((225+75,0+75),2,pygame.image.load('images\King_tower_up.png')),King_tower((225+75,650+75),1,pygame.image.load('images\King_tower_down.png'))]
+towers = towers_in_game[:]
 attacking_towers_in_game=[False,False,False,False,False,False]
 target_towers_in_game=[[],[],[],[],[],[]]
 destroyed_towers=[]
@@ -772,10 +1287,13 @@ bridge_down_left_position = (90 , 420)
 bridge_up_right_position = (510 , 370)
 bridge_down_right_position = (510 , 420)
 
-QueenTower_up_lef_position = (90 , 85)
+QueenTower_up_left_position = (90 , 85)
 QueenTower_up_right_position = (510 , 85)
-QueenTower_down_lef_position = (90 , 700)
+QueenTower_down_left_position = (90 , 700)
 QueenTower_down_right_position = (510 , 700)
+
+King_tower_up = (300 , 75)
+King_tower_down = (300 , 725)
 
 #main()
 pygame.init()
