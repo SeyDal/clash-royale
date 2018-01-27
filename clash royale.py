@@ -216,22 +216,85 @@ def drop_card():
                     trooplist_position[i] = (mouse_pos[0]-card_size[0]/2,window_height-card_size[1])
                 else :
                     trooplist_position[i]=(pygame.mouse.get_pos()[0]-(trooplist[i].get_size()[0]/2),pygame.mouse.get_pos()[1]-(trooplist[i].get_size()[1]/2))
-    elif card_selected[0]==True :
-            if (  trooplist_position[card_selected[1]][0] <= window_width-100-trooplist[card_selected[1]].get_size()[0]/2)\
-                and elixirs_teem1>=eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]],1).hero_cost:
-                card_selected[0]=False
-                heros_in_game.append(eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]],1))
+    elif card_selected[0] == True:
+        if (trooplist_position[card_selected[1]][0] <= window_width - 100 - trooplist[card_selected[1]].get_size()[
+            0] / 2) \
+                and elixirs_teem1 >= eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]],
+                                                                            1).hero_cost:
+            if towers[0] in destroyed_towers and towers[1] in destroyed_towers:
+                card_selected[0] = False
+                if 380<trooplist_position[card_selected[1]][1]<460 :
+                    heros_in_game.append(eval(trooplist_name[card_selected[1]])((trooplist_position[card_selected[1]][0],460), 1))
+                else :
+                    heros_in_game.append(eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]], 1))
                 attacking_heros_in_game.append(False)
                 target_heros_in_game.append([])
-                elixirs_teem1-=heros_in_game[-1].hero_cost
+                elixirs_teem1 -= heros_in_game[-1].hero_cost
                 random_select_troop()
-            else :
-                trooplist_position[card_selected[1]]=(605,window_height-(card_selected[1]+1)*trooplist[card_selected[1]].get_size()[1])
-                card_selected[0]=False
+            elif towers[0] not in destroyed_towers and towers[1] not in destroyed_towers:
+                if trooplist_position[card_selected[1]][1] > red_image.get_size()[1]:
+                    card_selected[0] = False
+                    if 380 < trooplist_position[card_selected[1]][1] < 460:
+                        heros_in_game.append(
+                            eval(trooplist_name[card_selected[1]])((trooplist_position[card_selected[1]][0], 460), 1))
+                    else:
+                        heros_in_game.append(
+                            eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]], 1))
+                    attacking_heros_in_game.append(False)
+                    target_heros_in_game.append([])
+                    elixirs_teem1 -= heros_in_game[-1].hero_cost
+                    random_select_troop()
+                else:
+                    trooplist_position[card_selected[1]] = (
+                        605, window_height - (card_selected[1] + 1) * trooplist[card_selected[1]].get_size()[1])
+                    card_selected[0] = False
+            elif towers[0] not in destroyed_towers and towers[1] in destroyed_towers:
+                if trooplist_position[card_selected[1]][1] > red_image.get_size()[1] or \
+                        trooplist_position[card_selected[1]][0] >= red_image.get_size()[0]:
+                    card_selected[0] = False
+                    if 380 < trooplist_position[card_selected[1]][1] < 460:
+                        heros_in_game.append(
+                            eval(trooplist_name[card_selected[1]])((trooplist_position[card_selected[1]][0], 460), 1))
+                    else:
+                        heros_in_game.append(
+                            eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]], 1))
+                    attacking_heros_in_game.append(False)
+                    target_heros_in_game.append([])
+                    elixirs_teem1 -= heros_in_game[-1].hero_cost
+                    random_select_troop()
+                else:
+                    trooplist_position[card_selected[1]] = (
+                        605, window_height - (card_selected[1] + 1) * trooplist[card_selected[1]].get_size()[1])
+                    card_selected[0] = False
+            elif towers[0] in destroyed_towers and towers[1] not in destroyed_towers:
+                if trooplist_position[card_selected[1]][1] > red_image.get_size()[1] or \
+                        trooplist_position[card_selected[1]][0] <= red_image.get_size()[0]:
+                    card_selected[0] = False
+                    if 380 < trooplist_position[card_selected[1]][1] < 460:
+                        heros_in_game.append(
+                            eval(trooplist_name[card_selected[1]])((trooplist_position[card_selected[1]][0], 460), 1))
+                    else:
+                        heros_in_game.append(
+                            eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]], 1))
+                    attacking_heros_in_game.append(False)
+                    target_heros_in_game.append([])
+                    elixirs_teem1 -= heros_in_game[-1].hero_cost
+                    random_select_troop()
+                else:
+                    trooplist_position[card_selected[1]] = (
+                        605, window_height - (card_selected[1] + 1) * trooplist[card_selected[1]].get_size()[1])
+                    card_selected[0] = False
+            else:
+                trooplist_position[card_selected[1]] = (
+                    605, window_height - (card_selected[1] + 1) * trooplist[card_selected[1]].get_size()[1])
+                card_selected[0] = False
+
+        else:
+            trooplist_position[card_selected[1]] = (
+            605, window_height - (card_selected[1] + 1) * trooplist[card_selected[1]].get_size()[1])
+            card_selected[0] = False
     for i in range(4):
-        window.blit(trooplist[i],trooplist_position[i])
-
-
+        window.blit(trooplist[i], trooplist_position[i])
 
 def move():
     global heros_in_game
@@ -331,6 +394,7 @@ def move():
                                 Y = Y0 - 5
                             if abs(Y - Y0) < 1:
                                 Y = Y0 - 1
+
                         else:
                             Y -= k
                             try:
@@ -345,10 +409,7 @@ def move():
 
 
                 else:
-                    print(i.position)
                     if X > 300 :
-                        print(destroyed_towers)
-                        print(towers[1].position, 5555)
                         if X > 510:
                             if towers[1] not in destroyed_towers :
                                 if abs(X - QueenTower_up_right_position[0]) < abs(Y - QueenTower_up_right_position[1]) :
@@ -402,7 +463,8 @@ def move():
                         else:
                             if towers[1] not in destroyed_towers :
                                 if abs(X - QueenTower_up_right_position[0]) < abs(Y - QueenTower_up_right_position[1]):
-                                    X += k
+                                    if X > 520 or X < 500:
+                                        X += k
                                     try:
                                         Y -= abs((QueenTower_up_right_position[1] - i.position[1]) / (
                                                 QueenTower_up_right_position[0] - i.position[0])) * m
@@ -424,37 +486,12 @@ def move():
                                     if abs(Y - Y0) < 1:
                                         X = X0 + 1
                             else:
-                                if X > 310 or X < 290:
-                                    if abs(X - King_tower_up[0]) < abs(Y - King_tower_up[1]):
+                                if abs(X - King_tower_up[0]) < abs(Y - King_tower_up[1]):
+                                    if X > 310 or X < 290:
                                         X -= k
-                                        try:
-                                            Y -= abs((King_tower_up[1] - i.position[1]) / (
-                                                    King_tower_up[0] - i.position[0])) * m
-                                        except ZeroDivisionError:
-                                            Y = Y0 - 5
-                                        if abs(Y - Y0) > 5.5:
-                                            Y = Y0 - 5
-                                        if abs(Y - Y0) < 1:
-                                            Y = Y0 - 1
-                                    else:
-                                        Y -= k
-                                        try:
-                                            X -= abs((King_tower_up[0] - i.position[0]) / (
-                                                    King_tower_up[1] - i.position[1])) * m
-                                        except ZeroDivisionError:
-                                            X = X0 - 5
-                                        if abs(X - X0) > 5.5:
-                                            X = X0 - 5
-                                        if abs(Y - Y0) < 1:
-                                            X = X0 - 1
-                    elif X > 90:
-                        if towers[0] not in destroyed_towers:
-                            if X > 100 or X < 80:
-                                if abs(X - QueenTower_up_left_position[0]) < abs(Y - QueenTower_up_left_position[1]):
-                                    X -= k
                                     try:
-                                        Y -= abs((QueenTower_up_left_position[1] - i.position[1]) / (
-                                                QueenTower_up_left_position[0] - i.position[0])) * m
+                                        Y -= abs((King_tower_up[1] - i.position[1]) / (
+                                                King_tower_up[0] - i.position[0])) * m
                                     except ZeroDivisionError:
                                         Y = Y0 - 5
                                     if abs(Y - Y0) > 5.5:
@@ -464,14 +501,39 @@ def move():
                                 else:
                                     Y -= k
                                     try:
-                                        X -= abs((QueenTower_up_left_position[0] - i.position[0]) / (
-                                                QueenTower_up_left_position[1] - i.position[1])) * m
+                                        X -= abs((King_tower_up[0] - i.position[0]) / (
+                                                King_tower_up[1] - i.position[1])) * m
                                     except ZeroDivisionError:
                                         X = X0 - 5
                                     if abs(X - X0) > 5.5:
                                         X = X0 - 5
                                     if abs(Y - Y0) < 1:
                                         X = X0 - 1
+                    elif X > 90:
+                        if towers[0] not in destroyed_towers:
+                            if abs(X - QueenTower_up_left_position[0]) < abs(Y - QueenTower_up_left_position[1]):
+                                if X > 100 or X < 80:
+                                    X -= k
+                                try:
+                                    Y -= abs((QueenTower_up_left_position[1] - i.position[1]) / (
+                                            QueenTower_up_left_position[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 - 1
+                            else:
+                                Y -= k
+                                try:
+                                    X -= abs((QueenTower_up_left_position[0] - i.position[0]) / (
+                                            QueenTower_up_left_position[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 - 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 - 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 - 1
                         else:
                             if abs(X - King_tower_up[0]) < abs(Y - King_tower_up[1]):
                                 if X > 310 or X < 290:
@@ -630,7 +692,7 @@ def move():
                             if abs(Y - Y0) < 1:
                                 X = X0 - 1
                     else:
-                        print(X,Y)
+
                         if abs(X - bridge_up_left_position[0]) < abs(Y - bridge_up_left_position[1]):
                             if X > 100 or X < 80:
                                 X += k
@@ -654,14 +716,10 @@ def move():
                                 X = X0 + 5
                             if abs(Y - Y0) < 1:
                                 X = X0 + 1
-                        print(X,Y)
-                        print(564516514651)
+
 
                 else:
-                    print(i.position)
                     if X > 300 :
-                        print(destroyed_towers)
-                        print(towers[1].position, 5555)
                         if X > 510:
                             if towers[3] not in destroyed_towers :
                                 if abs(X - QueenTower_down_right_position[0]) < abs(Y - QueenTower_down_right_position[1]) :
@@ -715,7 +773,8 @@ def move():
                         else:
                             if towers[3] not in destroyed_towers :
                                 if abs(X - QueenTower_down_right_position[0]) < abs(Y - QueenTower_down_right_position[1]):
-                                    X += k
+                                    if X > 520 or X < 500:
+                                        X += k
                                     try:
                                         Y += abs((QueenTower_down_right_position[1] - i.position[1]) / (
                                                 QueenTower_down_right_position[0] - i.position[0])) * m
@@ -737,29 +796,450 @@ def move():
                                     if abs(Y - Y0) < 1:
                                         X = X0 + 1
                             else:
-                                if X > 310 or X < 290:
-                                    if abs(X - King_tower_down[0]) < abs(Y - King_tower_down[1]):
+                                if abs(X - King_tower_down[0]) < abs(Y - King_tower_down[1]):
+                                    if X > 310 or X < 290:
                                         X -= k
-                                        try:
-                                            Y += abs((King_tower_down[1] - i.position[1]) / (
-                                                    King_tower_down[0] - i.position[0])) * m
-                                        except ZeroDivisionError:
-                                            Y = Y0 + 5
-                                        if abs(Y - Y0) > 5.5:
-                                            Y = Y0 + 5
-                                        if abs(Y - Y0) < 1:
-                                            Y = Y0 + 1
-                                    else:
-                                        Y += k
-                                        try:
-                                            X -= abs((King_tower_down[0] - i.position[0]) / (
-                                                    King_tower_down[1] - i.position[1])) * m
-                                        except ZeroDivisionError:
-                                            X = X0 - 5
-                                        if abs(X - X0) > 5.5:
-                                            X = X0 - 5
-                                        if abs(Y - Y0) < 1:
-                                            X = X0 - 1
+                                    try:
+                                        Y += abs((King_tower_down[1] - i.position[1]) / (
+                                                King_tower_down[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 + 1
+                                else:
+                                    Y += k
+                                    try:
+                                        X -= abs((King_tower_down[0] - i.position[0]) / (
+                                                King_tower_down[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 - 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 - 1
+                    elif X > 90:
+                        if towers[2] not in destroyed_towers:
+                            if abs(X - QueenTower_down_left_position[0]) < abs(Y - QueenTower_down_left_position[1]):
+                                if X > 100 or X < 80:
+                                    X -= k
+                                try:
+                                    Y += abs((QueenTower_down_left_position[1] - i.position[1]) / (
+                                            QueenTower_down_left_position[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 + 1
+                            else:
+                                Y += k
+                                try:
+                                    X -= abs((QueenTower_down_left_position[0] - i.position[0]) / (
+                                            QueenTower_down_left_position[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 - 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 - 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 - 1
+                        else:
+                            if abs(X - King_tower_down[0]) < abs(Y - King_tower_down[1]):
+                                if X > 310 or X < 290:
+                                    X += k
+                                try:
+                                    Y += abs((King_tower_down[1] - i.position[1]) / (
+                                            King_tower_down[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 + 1
+                            else:
+                                Y += k
+                                try:
+                                    X += abs((King_tower_down[0] - i.position[0]) / (
+                                            King_tower_down[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 + 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 + 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 + 1
+
+                    else:
+                        if towers[2] not in destroyed_towers:
+                            if abs(X - QueenTower_down_left_position[0]) < abs(Y - QueenTower_down_left_position[1]):
+                                if X > 100 or X < 80:
+                                    X += k
+                                try:
+                                    Y += abs((QueenTower_down_left_position[1] - i.position[1]) / (
+                                            QueenTower_down_left_position[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 + 1
+                            else:
+                                Y += k
+                                try:
+                                    X += abs((QueenTower_down_left_position[0] - i.position[0]) / (
+                                            QueenTower_down_left_position[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 + 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 + 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 + 1
+                        else:
+                            if abs(X - King_tower_down[0]) < abs(Y - King_tower_down[1]):
+                                if X > 310 or X < 290:
+                                    X += k
+                                try:
+                                    Y += abs((King_tower_down[1] - i.position[1]) / (
+                                            King_tower_down[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 + 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 + 1
+                            else:
+                                Y += k
+                                try:
+                                    X += abs((King_tower_down[0] - i.position[0]) / (
+                                            King_tower_down[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 + 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 + 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 + 1
+                i.position = (X, Y)
+
+def move_up():
+    global heros_in_game
+    for i in heros_in_game:
+        k = 1
+        m = 10
+        if i.type is "air":
+            if attacking_heros_in_game[heros_in_game.index(i)]==False :
+                X0 = i.position[0]
+                Y0 = i.position[1]
+                X = X0
+                Y = Y0
+                if i.id == 1:
+                    if X > 300:
+                        if X > 510:
+                            if towers[1] not in destroyed_towers:
+                                if abs(X - QueenTower_up_right_position[0]) < abs(Y - QueenTower_up_right_position[1]):
+                                    if X > 520 or X < 500:
+                                        X -= k
+                                    try:
+                                        Y -= abs((QueenTower_up_right_position[1] - i.position[1]) / (
+                                                QueenTower_up_right_position[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 - 1
+                                else:
+                                    Y -= k
+                                    try:
+                                        X -= abs((QueenTower_up_right_position[0] - i.position[0]) / (
+                                                QueenTower_up_right_position[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 - 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 - 1
+
+                            else:
+                                if abs(X - King_tower_up[0]) < abs(Y - King_tower_up[1]):
+                                    if X > 310 or X < 290:
+                                        X -= k
+                                    try:
+                                        Y -= abs((King_tower_up[1] - i.position[1]) / (
+                                                King_tower_up[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 - 1
+                                else:
+                                    Y -= k
+                                    try:
+                                        X -= abs((King_tower_up[0] - i.position[0]) / (
+                                                King_tower_up[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 - 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 - 1
+                        else:
+                            if towers[1] not in destroyed_towers:
+                                if abs(X - QueenTower_up_right_position[0]) < abs(Y - QueenTower_up_right_position[1]):
+                                    if X > 520 or X < 500:
+                                        X += k
+                                    try:
+                                        Y -= abs((QueenTower_up_right_position[1] - i.position[1]) / (
+                                                QueenTower_up_right_position[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 - 1
+                                else:
+                                    Y -= k
+                                    try:
+                                        X += abs((QueenTower_up_right_position[0] - i.position[0]) / (
+                                                QueenTower_up_right_position[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 + 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 + 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 + 1
+                            else:
+                                if abs(X - King_tower_up[0]) < abs(Y - King_tower_up[1]):
+                                    if X > 310 or X < 290:
+                                        X -= k
+                                    try:
+                                        Y -= abs((King_tower_up[1] - i.position[1]) / (
+                                                King_tower_up[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 - 1
+                                else:
+                                    Y -= k
+                                    try:
+                                        X -= abs((King_tower_up[0] - i.position[0]) / (
+                                                King_tower_up[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 - 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 - 1
+                    elif X > 90:
+                        if towers[0] not in destroyed_towers:
+                            if abs(X - QueenTower_up_left_position[0]) < abs(Y - QueenTower_up_left_position[1]):
+                                if X > 100 or X < 80:
+                                    X -= k
+                                try:
+                                    Y -= abs((QueenTower_up_left_position[1] - i.position[1]) / (
+                                            QueenTower_up_left_position[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 - 1
+                            else:
+                                Y -= k
+                                try:
+                                    X -= abs((QueenTower_up_left_position[0] - i.position[0]) / (
+                                            QueenTower_up_left_position[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 - 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 - 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 - 1
+                        else:
+                            if abs(X - King_tower_up[0]) < abs(Y - King_tower_up[1]):
+                                if X > 310 or X < 290:
+                                    X += k
+                                try:
+                                    Y -= abs((King_tower_up[1] - i.position[1]) / (
+                                            King_tower_up[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 - 1
+                            else:
+                                Y -= k
+                                try:
+                                    X += abs((King_tower_up[0] - i.position[0]) / (
+                                            King_tower_up[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 + 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 + 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 + 1
+
+                    else:
+                        if towers[0] not in destroyed_towers:
+                            if abs(X - QueenTower_up_left_position[0]) < abs(Y - QueenTower_up_left_position[1]):
+                                if X > 100 or X < 80:
+                                    X += k
+                                try:
+                                    Y -= abs((QueenTower_up_left_position[1] - i.position[1]) / (
+                                            QueenTower_up_left_position[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 - 1
+                            else:
+                                Y -= k
+                                try:
+                                    X += abs((QueenTower_up_left_position[0] - i.position[0]) / (
+                                            QueenTower_up_left_position[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 + 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 + 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 + 1
+                        else:
+                            if abs(X - King_tower_up[0]) < abs(Y - King_tower_up[1]):
+                                if X > 310 or X < 290:
+                                    X += k
+                                try:
+                                    Y -= abs((King_tower_up[1] - i.position[1]) / (
+                                            King_tower_up[0] - i.position[0])) * m
+                                except ZeroDivisionError:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) > 5.5:
+                                    Y = Y0 - 5
+                                if abs(Y - Y0) < 1:
+                                    Y = Y0 - 1
+                            else:
+                                Y -= k
+                                try:
+                                    X += abs((King_tower_up[0] - i.position[0]) / (
+                                            King_tower_up[1] - i.position[1])) * m
+                                except ZeroDivisionError:
+                                    X = X0 + 5
+                                if abs(X - X0) > 5.5:
+                                    X = X0 + 5
+                                if abs(Y - Y0) < 1:
+                                    X = X0 + 1
+                    i.position = (X, Y)
+
+                elif i.id == 2 :
+                    X0 = i.position[0]
+                    Y0 = i.position[1]
+                    X = X0
+                    Y = Y0
+                    if X > 300:
+                        if X > 510:
+                            if towers[3] not in destroyed_towers:
+                                if abs(X - QueenTower_down_right_position[0]) < abs(
+                                        Y - QueenTower_down_right_position[1]):
+                                    if X > 520 or X < 500:
+                                        X -= k
+                                    try:
+                                        Y += abs((QueenTower_down_right_position[1] - i.position[1]) / (
+                                                QueenTower_down_right_position[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 + 1
+                                else:
+                                    Y += k
+                                    try:
+                                        X -= abs((QueenTower_down_right_position[0] - i.position[0]) / (
+                                                QueenTower_down_right_position[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 - 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 - 1
+
+                            else:
+                                if abs(X - King_tower_down[0]) < abs(Y - King_tower_down[1]):
+                                    if X > 310 or X < 290:
+                                        X -= k
+                                    try:
+                                        Y += abs((King_tower_up[1] - i.position[1]) / (
+                                                King_tower_up[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 + 1
+                                else:
+                                    Y += k
+                                    try:
+                                        X -= abs((King_tower_up[0] - i.position[0]) / (
+                                                King_tower_up[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 - 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 - 1
+                        else:
+                            if towers[3] not in destroyed_towers:
+                                if abs(X - QueenTower_down_right_position[0]) < abs(
+                                        Y - QueenTower_down_right_position[1]):
+                                    if X > 520 or X < 500:
+                                        X += k
+                                    try:
+                                        Y += abs((QueenTower_down_right_position[1] - i.position[1]) / (
+                                                QueenTower_down_right_position[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 + 1
+                                else:
+                                    Y += k
+                                    try:
+                                        X += abs((QueenTower_down_right_position[0] - i.position[0]) / (
+                                                QueenTower_down_right_position[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 + 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 + 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 + 1
+                            else:
+                                if abs(X - King_tower_down[0]) < abs(Y - King_tower_down[1]):
+                                    if X > 310 or X < 290:
+                                        X -= k
+                                    try:
+                                        Y += abs((King_tower_down[1] - i.position[1]) / (
+                                                King_tower_down[0] - i.position[0])) * m
+                                    except ZeroDivisionError:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) > 5.5:
+                                        Y = Y0 + 5
+                                    if abs(Y - Y0) < 1:
+                                        Y = Y0 + 1
+                                else:
+                                    Y += k
+                                    try:
+                                        X -= abs((King_tower_down[0] - i.position[0]) / (
+                                                King_tower_down[1] - i.position[1])) * m
+                                    except ZeroDivisionError:
+                                        X = X0 - 5
+                                    if abs(X - X0) > 5.5:
+                                        X = X0 - 5
+                                    if abs(Y - Y0) < 1:
+                                        X = X0 - 1
                     elif X > 90:
                         if towers[2] not in destroyed_towers:
                             if abs(X - QueenTower_down_left_position[0]) < abs(Y - QueenTower_down_left_position[1]):
@@ -865,7 +1345,6 @@ def move():
 
 
 
-
 def show_heros_in_game (image_counter):
     for hero in heros_in_game :
         if attacking_heros_in_game[heros_in_game.index(hero)]==False :
@@ -874,6 +1353,7 @@ def show_heros_in_game (image_counter):
                     pos = (hero.position[0] - hero.move_image[0].get_size()[0] / 2,
                            hero.position[1] - hero.move_image[0].get_size()[1] / 2)
                     window.blit(hero.move_image[0],pos)
+                    print(pos)
                 else :
                     pos = (hero.position[0] - hero.move_image[1].get_size()[0] / 2,
                            hero.position[1] - hero.move_image[1].get_size()[1] / 2)
@@ -976,7 +1456,7 @@ def fire() :
                             attacking_heros_in_game[heros_in_game.index(hero1)] = True
                             target_towers_in_game[towers_in_game.index(tower)].append(hero1)
                             shoot(tower.position, hero1.weapon_image, hero1, tower)
-                            shoot_result3=True
+                            shoot_result2=True
                             window.blit(hero1.weapon_image[0], (hero1.weapon_image[1][0] - hero1.weapon_image[0].get_size()[0]/2 ,
                                                                 hero1.weapon_image[1][1] - hero1.weapon_image[0].get_size()[1]/2))
                     else:
@@ -1074,12 +1554,17 @@ def shoot2(target_position , weapon_image , tower , hero):
     print(hero)
     x1 = weapon_image[1][0]
     y1 = weapon_image[1][1]
+    a = 5
+    t = 10
     if x1 > target_position[0]:
         if y1 > target_position[1]:
             if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
-                x1 -= 5
+                if x1 < target_position[0] + a and x1 > target_position[0] - a:
+                    x1 -= a/2
+                else:
+                    x1 -= a
                 try:
-                    y1 -= abs((target_position[1] - y1) / (target_position[0] - x1)) * 10
+                    y1 -= abs((target_position[1] - y1) / (target_position[0] - x1)) * t
                 except:
                     y1 = weapon_image[1][1] - 10
                 if abs(weapon_image[1][1] - y1) > 10:
@@ -1087,9 +1572,9 @@ def shoot2(target_position , weapon_image , tower , hero):
                 if abs(weapon_image[1][1] - y1) < 1:
                     y1 = weapon_image[1][1] - 1
             else:
-                y1 -= 5
+                y1 -= a
                 try:
-                    x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+                    x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * t
                 except:
                     x1 = weapon_image[1][0] - 10
                 if abs(weapon_image[1][0] - x1) > 10:
@@ -1099,9 +1584,12 @@ def shoot2(target_position , weapon_image , tower , hero):
 
         else:
             if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
-                x1 -= 5
+                if x1 < target_position[0] + a and x1 > target_position[0] - a:
+                    x1 -= a/2
+                else:
+                    x1 -= a
                 try:
-                    y1 += abs((target_position[1] - y1) / (target_position[0] - x1)) * 10
+                    y1 += abs((target_position[1] - y1) / (target_position[0] - x1)) * t
                 except:
                     y1 = weapon_image[1][1] + 10
                 if abs(weapon_image[1][1] - y1) > 10:
@@ -1109,9 +1597,9 @@ def shoot2(target_position , weapon_image , tower , hero):
                 if abs(weapon_image[1][1] - y1) < 1:
                     y1 = weapon_image[1][1] + 1
             else:
-                y1 += 5
+                y1 += a
                 try:
-                    x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+                    x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * t
                 except:
                     x1 = weapon_image[1][0] - 10
                 if abs(weapon_image[1][0] - x1) > 10:
@@ -1121,9 +1609,12 @@ def shoot2(target_position , weapon_image , tower , hero):
 
     elif y1 < target_position[1]:
         if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
-            x1 += 5
+            if x1 < target_position[0] + a and x1 > target_position[0] - a:
+                x1 += a/2
+            else:
+                x1 += a
             try:
-                y1 += abs((target_position[1] - y1) / (target_position[0] - x1)) * 10
+                y1 += abs((target_position[1] - y1) / (target_position[0] - x1)) * t
             except:
                 y1 = weapon_image[1][1] + 10
             if abs(weapon_image[1][1] - y1) > 10:
@@ -1131,9 +1622,9 @@ def shoot2(target_position , weapon_image , tower , hero):
             if abs(weapon_image[1][1] - y1) < 1:
                 y1 = weapon_image[1][1] + 1
         else:
-            y1 += 5
+            y1 += a
             try:
-                x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+                x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * t
             except:
                 x1 = weapon_image[1][0] + 10
             if abs(weapon_image[1][0] - x1) > 10:
@@ -1143,9 +1634,12 @@ def shoot2(target_position , weapon_image , tower , hero):
 
     else:
         if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
-            x1 += 5
+            if x1 < target_position[0] + a and x1 > target_position[0] - a:
+                x1 += a/2
+            else:
+                x1 += a
             try:
-                y1 -= abs((target_position[1] - y1) / (target_position[0] - x1)) * 10
+                y1 -= abs((target_position[1] - y1) / (target_position[0] - x1)) * t
             except:
                 y1 = weapon_image[1][1] - 10
             if abs(weapon_image[1][1] - y1) > 10:
@@ -1153,9 +1647,9 @@ def shoot2(target_position , weapon_image , tower , hero):
             if abs(weapon_image[1][1] - y1) < 1:
                 y1 = weapon_image[1][1] - 1
         else:
-            y1 -= 5
+            y1 -= a
             try:
-                x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+                x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * t
             except:
                 x1 = weapon_image[1][0] + 10
             if abs(weapon_image[1][0] - x1) > 10:
@@ -1174,12 +1668,17 @@ def shoot(target_position , weapon_image , hero1 , hero2):
 
     x1 = weapon_image[1][0]
     y1 = weapon_image[1][1]
+    a = 5
+    t = 10
     if x1 > target_position[0]:
         if y1 > target_position[1] :
             if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
-                x1 -= 5
+                if x1 < target_position[0] + a and x1 > target_position[0] - a:
+                    x1 -= a/2
+                else:
+                    x1 -= a
                 try :
-                    y1 -= abs((target_position[1] - y1) / (target_position[0] - x1))*10
+                    y1 -= abs((target_position[1] - y1) / (target_position[0] - x1))*t
                 except :
                     y1 = weapon_image[1][1] - 10
                 if abs(weapon_image[1][1] - y1) > 10 :
@@ -1187,9 +1686,9 @@ def shoot(target_position , weapon_image , hero1 , hero2):
                 if abs(weapon_image[1][1] - y1) < 1 :
                     y1 = weapon_image[1][1] - 1
             else :
-                y1 -= 5
+                y1 -= a
                 try:
-                    x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+                    x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * t
                 except:
                     x1 = weapon_image[1][0] - 10
                 if abs(weapon_image[1][0] - x1) > 10:
@@ -1199,9 +1698,12 @@ def shoot(target_position , weapon_image , hero1 , hero2):
 
         else:
             if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
-                x1 -= 5
+                if x1 < target_position[0] + a and x1 > target_position[0] - a:
+                    x1 -= a/2
+                else:
+                    x1 -= a
                 try :
-                    y1 += abs((target_position[1] - y1) / (target_position[0] - x1))*10
+                    y1 += abs((target_position[1] - y1) / (target_position[0] - x1))*t
                 except :
                     y1 = weapon_image[1][1] + 10
                 if abs(weapon_image[1][1] - y1) > 10 :
@@ -1209,9 +1711,9 @@ def shoot(target_position , weapon_image , hero1 , hero2):
                 if abs(weapon_image[1][1] - y1) < 1 :
                     y1 = weapon_image[1][1] + 1
             else :
-                y1 += 5
+                y1 += a
                 try:
-                    x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+                    x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * t
                 except:
                     x1 = weapon_image[1][0] - 10
                 if abs(weapon_image[1][0] - x1) > 10:
@@ -1221,9 +1723,12 @@ def shoot(target_position , weapon_image , hero1 , hero2):
 
     elif y1 < target_position[1] :
         if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
-            x1 += 5
+            if x1 < target_position[0] + a and x1 > target_position[0] - a:
+                x1 += a/2
+            else:
+                x1 += a
             try:
-                y1 += abs((target_position[1] - y1) / (target_position[0] - x1)) * 10
+                y1 += abs((target_position[1] - y1) / (target_position[0] - x1)) * t
             except:
                 y1 = weapon_image[1][1] + 10
             if abs(weapon_image[1][1] - y1) > 10:
@@ -1231,9 +1736,9 @@ def shoot(target_position , weapon_image , hero1 , hero2):
             if abs(weapon_image[1][1] - y1) < 1:
                 y1 = weapon_image[1][1] + 1
         else:
-            y1 += 5
+            y1 += a
             try:
-                x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+                x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * t
             except:
                 x1 = weapon_image[1][0] + 10
             if abs(weapon_image[1][0] - x1) > 10:
@@ -1243,9 +1748,12 @@ def shoot(target_position , weapon_image , hero1 , hero2):
 
     else :
         if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
-            x1 += 5
+            if x1 < target_position[0] + a and x1 > target_position[0] - a:
+                x1 += a/2
+            else:
+                x1 += a
             try:
-                y1 -= abs((target_position[1] - y1) / (target_position[0] - x1)) * 10
+                y1 -= abs((target_position[1] - y1) / (target_position[0] - x1)) * t
             except:
                 y1 = weapon_image[1][1] - 10
             if abs(weapon_image[1][1] - y1) > 10:
@@ -1253,9 +1761,9 @@ def shoot(target_position , weapon_image , hero1 , hero2):
             if abs(weapon_image[1][1] - y1) < 1:
                 y1 = weapon_image[1][1] - 1
         else:
-            y1 -= 5
+            y1 -= a
             try:
-                x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * 10
+                x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * t
             except:
                 x1 = weapon_image[1][0] + 10
             if abs(weapon_image[1][0] - x1) > 10:
@@ -1302,11 +1810,19 @@ def show_elixir():
     text1 = font.render(str(elixirs_teem1), True, (150, 0, 150))
     window.blit(text1, (612 - text1.get_width() // 2, 148 - text1.get_height() // 2))
 
+def show_forbidden_area():
+    if card_selected[0]==True :
+        if towers[0] not in destroyed_towers :
+            window.blit(red_image,(0,0))
+        if towers[1] not in destroyed_towers :
+            window.blit(red_image,(red_image.get_size()[0],0))
+
 
 def quit_game():
     pygame.quit()
     sys.exit()
 #picture
+red_image=pygame.image.load('images/red.png')
 archer_card=pygame.image.load('images/ArcherCard.png')
 wizard_card=pygame.image.load('images/WizardCard.png')
 giant_card=pygame.image.load('images/GiantCard.png')
@@ -1316,14 +1832,14 @@ pekka_card=pygame.image.load('images/MiniPEKKACard.png')
 mega_minion_card=pygame.image.load('images/MegaMinionCard.png')
 #variables
 last_elixir_given_time=0
-elixir_reload_time=2
+elixir_reload_time=0
 elixirs_teem1=0
 elixirs_teem2=0
 dictroop = {"Archer" :archer_card  , "Wizard" : wizard_card , "Giant" : giant_card
     , "Knight" : knight_card , "Mega_minion" : mega_minion_card , "Pekka" : pekka_card , "Balloon" : balloon_card }
 card_selected=[False,0]
-heros_in_game=[Wizard((0,0),2),Knight((350,310),2)]
-attacking_heros_in_game=[False,False]
+heros_in_game=[]
+attacking_heros_in_game=[]
 target_heros_in_game=[[],[]]
 towers_in_game=[Princess_tower((10+75,20+75),2,pygame.image.load('images\Queen_tower_up.png')),Princess_tower((430+75,20+75),2,pygame.image.load('images\Queen_tower_up.png')),
                 Princess_tower((10+75, 650+75), 1, pygame.image.load('images\Queen_tower_down.png')),Princess_tower((430+75,650+75),1,pygame.image.load('images\Queen_tower_down.png')),
@@ -1339,9 +1855,9 @@ window_width=700
 window_height=800
 
 
-bridge_up_left_position = (90 , 370)
+bridge_up_left_position = (90 , 380)
 bridge_down_left_position = (90 , 420)
-bridge_up_right_position = (510 , 370)
+bridge_up_right_position = (510 , 380)
 bridge_down_right_position = (510 , 420)
 
 QueenTower_up_left_position = (90 , 85)
@@ -1358,14 +1874,16 @@ window=pygame.display.set_mode((window_width,window_height))
 image_counter=0
 
 while True :
-
+    print(pygame.mouse.get_pos())
     draw_map()
+    show_forbidden_area()
     image_counter+=1
     drop_card()
-    if image_counter % 3 == 0:
+    if image_counter % 1 == 0:
         fire()
     if image_counter % 6 == 0 :
         move()
+        move_up()
     show_towers()
     show_heros_in_game(image_counter)
     show_time()
