@@ -1547,7 +1547,60 @@ def fire() :
             del attacking_towers_in_game[k]
             del target_towers_in_game[k]
 
+def area_damage():
+    for hero1 in heros_in_game :
+        if hero1.area_damage != False:
+            for hero2 in heros_in_game :
+                if hero1.id != hero2.id :
+                    x = hero1.position[0]
+                    y = hero1.position[1]
+                    x1 = hero2.position[0]
+                    y1 = hero2.position[1]
+                    distance = ((x - x1)**2 + (y-y1)**2)**0.5
+                    if distance / 20 <= hero1.range and (hero2.type in hero1.target):
+                        hero2.hit_point -= hero1.area_damage
+            for tower in towers_in_game :
+                if hero1.id != tower.id :
+                    x = hero1.position[0]
+                    y = hero1.position[1]
+                    x1 = tower.position[0]
+                    y1 = tower.position[1]
+                    distance = ((x - x1) ** 2 + (y - y1) ** 2) ** 0.5
+                    if distance / 20 <= hero1.range :
+                        tower.hit_point -= hero1.area_damage
 
+def Hoooosh():
+    global heros_in_use2,attacking_heros_in_game,heros_in_game,target_heros_in_game
+    temp_troop = list(dictroop.keys())
+    tem_troop = []
+    long_range_troops = ["Wizard","Mega_minion"]
+    for i in range(6):
+        card = random.choice(temp_troop)
+        heros_in_use2.append(card)
+        temp_troop.remove(card)
+    print(heros_in_use2)
+    if len(heros_in_game) == 0 :
+        if elixirs_teem2 == 8 :
+            troop = random.choice(long_range_troops)
+            rand_x1 = random.randint(80,100)
+            rand_y = random.randint(100,200)
+            rand_x2 = random.randint(500,520)
+            if troop in heros_in_use2 :
+                heros_in_game.append(eval(troop+str((random.choice([rand_x1,rand_x2]),rand_y))+str(2)))
+                attacking_heros_in_game.append(False)
+                target_heros_in_game.append([])
+            else:
+                long_range_troops.remove(troop)
+                if long_range_troops[0] in heros_in_use2:
+                    heros_in_game.append(eval(long_range_troops[0] + str((random.choice([rand_x1, rand_x2]), rand_y)) + str(2)))
+                    attacking_heros_in_game.append(False)
+                    target_heros_in_game.append([])
+            for elixir in range(2,5):
+                for card in heros_in_use2 :
+                    if card.hero_cost == elixir :
+                        heros_in_game.append(eval(card + str((random.choice([rand_x1, rand_x2]), rand_y)) + str(2)))
+                        attacking_heros_in_game.append(False)
+                        target_heros_in_game.append([])
 
 
 
@@ -1672,6 +1725,7 @@ def shoot(target_position , weapon_image , hero1 , hero2):
             hero2.hit_point -= hero1.damage
             attacking_heros_in_game[heros_in_game.index(hero1)] = False
             weapon_image[1] = hero1.position
+            area_damage()
 
     x1 = weapon_image[1][0]
     y1 = weapon_image[1][1]
@@ -1949,7 +2003,7 @@ trooplist = []
 trooplist_position=[]
 trooplist_name=[]
 window_width=700
-window_height=800
+window_height = 800
 
 
 bridge_up_left_position = (90 , 380)
