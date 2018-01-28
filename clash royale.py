@@ -28,6 +28,7 @@ class Wizard(Hero):
         self.attack_image=[pygame.image.load('images/wizard_attack_up1.png'),pygame.image.load('images/wizard_attack_up2.png')
             ,pygame.image.load('images/wizard_attack_down1.png'),pygame.image.load('images/wizard_attack_down2.png')]
         self.weapon_image = [pygame.image.load ("images/Wizard_fire.png") , self.position]
+        self.max_health = 598
 
 class Balloon(Hero):
     def __init__(self,position,id):
@@ -39,6 +40,8 @@ class Balloon(Hero):
         self.attack_image=[pygame.image.load('images/balloon1.png'),pygame.image.load('images/balloon1.png')
             ,pygame.image.load('images/balloon1.png'),pygame.image.load('images/balloon1.png')]
         self.weapon_image = [pygame.image.load ("images/weapon.png") , self.position]
+        self.max_health = 1396
+
 
 
 class Pekka(Hero):
@@ -51,6 +54,7 @@ class Pekka(Hero):
         self.attack_image=[pygame.image.load('images/pekka_attack_up1.png'),pygame.image.load('images/pekka_attack_up2.png')
             ,pygame.image.load('images/pekka_attack_down1.png'),pygame.image.load('images/pekka_attack_down2.png')]
         self.weapon_image = [pygame.image.load ("images/weapon.png") , self.position]
+        self.max_health = 1059
 
 
 class Archer(Hero):
@@ -63,6 +67,7 @@ class Archer(Hero):
         self.attack_image=[pygame.image.load('images/archer_attack_up1.png'),pygame.image.load('images/archer_attack_up2.png')
             ,pygame.image.load('images/archer_attack_down1.png'),pygame.image.load('images/archer_attack_down2.png')]
         self.weapon_image = [pygame.image.load ("images/Archer_arrow.png") , self.position]
+        self.max_health = 254
 
 class Power :
     def __init__(self,position,id):
@@ -75,6 +80,7 @@ class Power :
         self.move_image =[pygame.image.load(),pygame.image.load(),pygame.image.load(),pygame.image.load()]
         self.attack_image=[pygame.image.load(),pygame.image.load(),pygame.image.load(),pygame.image.load()]
         self.weapon_image = [pygame.image.load ("images/weapon.png") , self.position]
+        self.max_health = 0
 
 
 class Giant(Hero):
@@ -87,6 +93,7 @@ class Giant(Hero):
         self.attack_image=[pygame.image.load('images/giant_attack_up1.png'),pygame.image.load('images/giant_attack_up2.png')
             ,pygame.image.load('images/giant_attack_down1.png'),pygame.image.load('images/giant_attack_down2.png')]
         self.weapon_image = [pygame.image.load ("images/weapon.png") , self.position]
+        self.max_health = 3344
 
 class Knight(Hero):
     def __init__(self, position,id):
@@ -98,6 +105,7 @@ class Knight(Hero):
         self.attack_image=[pygame.image.load('images/knight_attack_up1.png'),pygame.image.load('images/knight_attack_up2.png')
             ,pygame.image.load('images/knight_attack_down1.png'),pygame.image.load('images/knight_attack_down2.png')]
         self.weapon_image = [pygame.image.load ("images/weapon.png") , self.position]
+        self.max_health = 1399
 
 
 class Mega_minion(Hero):
@@ -110,6 +118,7 @@ class Mega_minion(Hero):
         self.attack_image=[pygame.image.load('images/mega_minion_attack_up1.png'),pygame.image.load('images/mega_minion_attack_up2.png')
             ,pygame.image.load('images/mega_minion_attack_down1.png'),pygame.image.load('images/mega_minion_attack_down2.png')]
         self.weapon_image = [pygame.image.load ("images/Megaminion_arrow.png") , self.position]
+        self.max_health = 695
 
     #builging information
 class Building :
@@ -123,6 +132,7 @@ class Building :
         self.destroyed_image=pygame.image.load('images\Queen_tower_broken.png')
 
 
+
 class King_tower (Building):
     def __init__(self,position,id,image):
         Building.__init__(self,90,4500,1,15,"building",('air','ground','building'))
@@ -131,6 +141,7 @@ class King_tower (Building):
         self.attack_image=[image,image,image,image]
         self.weapon_image = [pygame.image.load ("images/King_tower_arrow.png") , self.position]
         self.id=id
+        self.max_health = 4500
 
 
 class Princess_tower (Building):
@@ -141,6 +152,7 @@ class Princess_tower (Building):
         self.attack_image=[image,image,image,image]
         self.weapon_image = [pygame.image.load ("images/Queen_tower_arrow.png") , self.position]
         self.id=id
+        self.max_health = 2800
 
 
 
@@ -221,15 +233,16 @@ def drop_card():
                 and elixirs_teem1 >= eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]],
                                                                             1).hero_cost:
             if towers[0] in destroyed_towers and towers[1] in destroyed_towers:
-                card_selected[0] = False
-                if 380<trooplist_position[card_selected[1]][1]<460 :
-                    heros_in_game.append(eval(trooplist_name[card_selected[1]])((trooplist_position[card_selected[1]][0],460), 1))
-                else :
-                    heros_in_game.append(eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]], 1))
-                attacking_heros_in_game.append(False)
-                target_heros_in_game.append([])
-                elixirs_teem1 -= heros_in_game[-1].hero_cost
-                random_select_troop()
+                if trooplist_position[card_selected[1][1]] > 269 + 25 :
+                    card_selected[0] = False
+                    if 380<trooplist_position[card_selected[1]][1]<460 :
+                        heros_in_game.append(eval(trooplist_name[card_selected[1]])((trooplist_position[card_selected[1]][0],460), 1))
+                    else :
+                        heros_in_game.append(eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]], 1))
+                    attacking_heros_in_game.append(False)
+                    target_heros_in_game.append([])
+                    elixirs_teem1 -= heros_in_game[-1].hero_cost
+                    random_select_troop()
             elif towers[0] not in destroyed_towers and towers[1] not in destroyed_towers:
                 if trooplist_position[card_selected[1]][1] > red_image.get_size()[1]:
                     card_selected[0] = False
@@ -249,7 +262,7 @@ def drop_card():
                     card_selected[0] = False
             elif towers[0] not in destroyed_towers and towers[1] in destroyed_towers:
                 if trooplist_position[card_selected[1]][1] > red_image.get_size()[1] or \
-                        trooplist_position[card_selected[1]][0] >= red_image.get_size()[0]:
+                        (trooplist_position[card_selected[1]][0] >= red_image.get_size()[0] and trooplist_position[card_selected[1][1]] > 269 + 25):
                     card_selected[0] = False
                     if 380 < trooplist_position[card_selected[1]][1] < 460:
                         heros_in_game.append(
@@ -267,7 +280,7 @@ def drop_card():
                     card_selected[0] = False
             elif towers[0] in destroyed_towers and towers[1] not in destroyed_towers:
                 if trooplist_position[card_selected[1]][1] > red_image.get_size()[1] or \
-                        trooplist_position[card_selected[1]][0] <= red_image.get_size()[0]:
+                        (trooplist_position[card_selected[1]][0] <= red_image.get_size()[0] and trooplist_position[card_selected[1][1]] > 269 + 25):
                     card_selected[0] = False
                     if 380 < trooplist_position[card_selected[1]][1] < 460:
                         heros_in_game.append(
@@ -923,7 +936,7 @@ def move_up():
     global heros_in_game
     for i in heros_in_game:
         k = 1
-        m = 10
+        m = 1
         if i.type is "air":
             if attacking_heros_in_game[heros_in_game.index(i)]==False :
                 X0 = i.position[0]
@@ -1352,39 +1365,95 @@ def show_heros_in_game (image_counter):
                     pos = (hero.position[0] - hero.move_image[0].get_size()[0] / 2,
                            hero.position[1] - hero.move_image[0].get_size()[1] / 2)
                     window.blit(hero.move_image[0],pos)
+                    pygame.draw.rect(window,(50,50,50),(hero.position[0] - hero.move_image[0].get_size()[0] /
+                                                        2+50,hero.position[1] - hero.move_image[0].get_size()[1] / 2+40,50,7))
+                    pygame.draw.rect(window,(50,50,200),(hero.position[0] - hero.move_image[0].get_size()[0] / 2+50,
+                                                         hero.position[1] - hero.move_image[0].get_size()[1] / 2+40,(hero.hit_point/hero.max_health)*50,7))
+
                     print(pos)
                 else :
                     pos = (hero.position[0] - hero.move_image[1].get_size()[0] / 2,
                            hero.position[1] - hero.move_image[1].get_size()[1] / 2)
                     window.blit(hero.move_image[1],pos)
+                    pygame.draw.rect(window, (50, 50, 50), (hero.position[0] - hero.move_image[0].get_size()[0] /
+                                                            2 + 50, hero.position[1] - hero.move_image[0].get_size()[
+                                                                1] / 2 + 40, 50, 7))
+                    pygame.draw.rect(window, (50, 50, 200),
+                                     (hero.position[0] - hero.move_image[0].get_size()[0] / 2 + 50,
+                                      hero.position[1] - hero.move_image[0].get_size()[1] / 2 + 40,
+                                      (hero.hit_point / hero.max_health) * 50, 7))
+
+
             if hero.id==2 :
                 if image_counter % 20 < 10:
                     pos = (hero.position[0] - hero.move_image[2].get_size()[0] / 2,
                            hero.position[1] - hero.move_image[2].get_size()[1] / 2)
                     window.blit(hero.move_image[2],pos)
+                    pygame.draw.rect(window, (50, 50, 50), (hero.position[0] - hero.move_image[0].get_size()[0] /
+                                                            2 + 50, hero.position[1] - hero.move_image[0].get_size()[
+                                                                1] / 2 + 40, 50, 7))
+                    pygame.draw.rect(window, (200, 50, 50),
+                                     (hero.position[0] - hero.move_image[0].get_size()[0] / 2 + 50,
+                                      hero.position[1] - hero.move_image[0].get_size()[1] / 2 + 40,
+                                      (hero.hit_point / hero.max_health) * 50, 7))
                 else :
                     pos = (hero.position[0] - hero.move_image[3].get_size()[0] / 2,
                            hero.position[1] - hero.move_image[3].get_size()[1] / 2)
                     window.blit(hero.move_image[3],pos)
+                    pygame.draw.rect(window, (50, 50, 50), (hero.position[0] - hero.move_image[0].get_size()[0] /
+                                                            2 + 50, hero.position[1] - hero.move_image[0].get_size()[
+                                                                1] / 2 + 40, 50, 7))
+                    pygame.draw.rect(window, (200, 50, 50),
+                                     (hero.position[0] - hero.move_image[0].get_size()[0] / 2 + 50,
+                                      hero.position[1] - hero.move_image[0].get_size()[1] / 2 + 40,
+                                      (hero.hit_point / hero.max_health) * 50, 7))
         else :
             if hero.id==1 :
                 if image_counter % 80 < 40:
                     pos = (hero.position[0] - hero.move_image[0].get_size()[0] / 2,
                            hero.position[1] - hero.move_image[0].get_size()[1] / 2)
                     window.blit(hero.attack_image[0],pos)
+                    pygame.draw.rect(window, (50, 50, 50), (hero.position[0] - hero.move_image[0].get_size()[0] /
+                                                            2 + 50, hero.position[1] - hero.move_image[0].get_size()[
+                                                                1] / 2 + 40, 50, 7))
+                    pygame.draw.rect(window, (50, 50, 200),
+                                     (hero.position[0] - hero.move_image[0].get_size()[0] / 2 + 50,
+                                      hero.position[1] - hero.move_image[0].get_size()[1] / 2 + 40,
+                                      (hero.hit_point / hero.max_health) * 50, 7))
                 else :
                     pos = (hero.position[0] - hero.move_image[1].get_size()[0] / 2,
                            hero.position[1] - hero.move_image[1].get_size()[1] / 2)
                     window.blit(hero.attack_image[1],pos)
+                    pygame.draw.rect(window, (50, 50, 50), (hero.position[0] - hero.move_image[0].get_size()[0] /
+                                                            2 + 50, hero.position[1] - hero.move_image[0].get_size()[
+                                                                1] / 2 + 40, 50, 7))
+                    pygame.draw.rect(window, (50, 50, 200),
+                                     (hero.position[0] - hero.move_image[0].get_size()[0] / 2 + 50,
+                                      hero.position[1] - hero.move_image[0].get_size()[1] / 2 + 40,
+                                      (hero.hit_point / hero.max_health) * 50, 7))
             if hero.id==2 :
                 if image_counter % 80 < 40:
                     pos = (hero.position[0] - hero.move_image[2].get_size()[0] / 2,
                            hero.position[1] - hero.move_image[2].get_size()[1] / 2)
                     window.blit(hero.attack_image[2],pos)
+                    pygame.draw.rect(window, (50, 50, 50), (hero.position[0] - hero.move_image[0].get_size()[0] /
+                                                            2 + 50, hero.position[1] - hero.move_image[0].get_size()[
+                                                                1] / 2 + 40, 50, 7))
+                    pygame.draw.rect(window, (200, 50, 50),
+                                     (hero.position[0] - hero.move_image[0].get_size()[0] / 2 + 50,
+                                      hero.position[1] - hero.move_image[0].get_size()[1] / 2 + 40,
+                                      (hero.hit_point / hero.max_health) * 50, 7))
                 else :
                     pos = (hero.position[0] - hero.move_image[3].get_size()[0] / 2,
                            hero.position[1] - hero.move_image[3].get_size()[1] / 2)
                     window.blit(hero.attack_image[3],pos)
+                    pygame.draw.rect(window, (50, 50, 50), (hero.position[0] - hero.move_image[0].get_size()[0] /
+                                                            2 + 50, hero.position[1] - hero.move_image[0].get_size()[
+                                                                1] / 2 + 40, 50, 7))
+                    pygame.draw.rect(window, (200, 50, 50),
+                                     (hero.position[0] - hero.move_image[0].get_size()[0] / 2 + 50,
+                                      hero.position[1] - hero.move_image[0].get_size()[1] / 2 + 40,
+                                      (hero.hit_point / hero.max_health) * 50, 7))
 
 def fire() :
     global game_result
@@ -1839,6 +1908,20 @@ def shoot(target_position , weapon_image , hero1 , hero2):
 def show_towers():
     for i in towers_in_game :
         window.blit(i.image[1],(i.position[0]-i.image[1].get_size()[0]/2,i.position[1]-i.image[1].get_size()[1]/2))
+        if i.id == 1 :
+            pygame.draw.rect(window, (50, 50, 50), (i.position[0] - i.image[0].get_size()[0] /
+                                                    2 + 50, i.position[1] - i.image[0].get_size()[1] / 2 ,
+                                                    60, 7))
+            pygame.draw.rect(window, (50, 50, 200), (i.position[0] - i.image[0].get_size()[0] / 2 + 50,
+                                                     i.position[1] - i.image[0].get_size()[1] / 2 ,
+                                                     (i.hit_point / i.max_health) * 60, 7))
+        else :
+            pygame.draw.rect(window, (50, 50, 50), (i.position[0] - i.image[0].get_size()[0] /
+                                                    2 + 50, i.position[1] - i.image[0].get_size()[1] / 2,
+                                                    60, 7))
+            pygame.draw.rect(window, (200, 50, 50), (i.position[0] - i.image[0].get_size()[0] / 2 + 50,
+                                                     i.position[1] - i.image[0].get_size()[1] / 2,
+                                                     (i.hit_point / i.max_health) * 60, 7))
     for i in destroyed_towers :
         window.blit(i.destroyed_image,(i.position[0]-i.destroyed_image.get_size()[0]/2,i.position[1]-i.destroyed_image.get_size()[1]/2))
 
@@ -1875,8 +1958,12 @@ def show_forbidden_area():
     if card_selected[0]==True :
         if towers[0] not in destroyed_towers :
             window.blit(red_image,(0,0))
+        else:
+            window.blit(red_image, (0, -125))
         if towers[1] not in destroyed_towers :
             window.blit(red_image,(red_image.get_size()[0],0))
+        else :
+            window.blit(red_image, (red_image.get_size()[0], -125))
 
 def game_controler():
     global end_game,game_result_before_extra_time
@@ -2049,6 +2136,7 @@ while True :
             fire()
         if image_counter % 6 == 0 :
             move()
+        if image_counter % 30 == 0 :
             move_up()
         show_towers()
         show_heros_in_game(image_counter)
@@ -2056,7 +2144,6 @@ while True :
         show_elixir()
         show_crowns()
         game_controler()
-        print(game_result,end_game)
 
     elif end_game==True:
         draw_map()
