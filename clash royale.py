@@ -46,7 +46,7 @@ class Balloon(Hero):
 
 class Pekka(Hero):
     def __init__(self,position,id):
-        Hero.__init__(self,598,1059,1.8,2,False,4,"ground",("ground","building"))
+        Hero.__init__(self,598,1059,1.8,3,False,4,"ground",("ground","building"))
         self.position=position
         self.id=id
         self.move_image = [pygame.image.load('images/pekka_move_up1.png'),pygame.image.load('images/pekka_move_up2.png')
@@ -59,7 +59,7 @@ class Pekka(Hero):
 
 class Archer(Hero):
     def __init__(self,position,id):
-        Hero.__init__(self,86,254,1.2,4,True,2,"ground",("air","ground","building"))
+        Hero.__init__(self,86,254,1.2,5,True,2,"ground",("air","ground","building"))
         self.position=position
         self.id=id
         self.move_image =[pygame.image.load('images/archer_move_up1.png'),pygame.image.load('images/archer_move_up2.png')
@@ -85,7 +85,7 @@ class Power :
 
 class Giant(Hero):
     def __init__(self, position,id):
-        Hero.__init__(self, 211, 3344, 1.5, 2 , False, 5, "ground", ("building"))
+        Hero.__init__(self, 211, 3344, 1.5, 4 , False, 5, "ground", ("building"))
         self.position = position
         self.id=id
         self.move_image = [pygame.image.load('images/giant_move_up1.png'),pygame.image.load('images/giant_move_up2.png')
@@ -97,7 +97,7 @@ class Giant(Hero):
 
 class Knight(Hero):
     def __init__(self, position,id):
-        Hero.__init__(self, 159, 1399, 1.2, 2, False, 3, "ground", ("ground", "building"))
+        Hero.__init__(self, 159, 1399, 1.2, 4, False, 3, "ground", ("ground", "building"))
         self.position = position
         self.id=id
         self.move_image = [pygame.image.load('images/knight_move_up1.png'),pygame.image.load('images/knight_move_up2.png')
@@ -110,7 +110,7 @@ class Knight(Hero):
 
 class Mega_minion(Hero):
     def __init__(self, position,id):
-        Hero.__init__(self, 258, 695, 1.5, 4, True, 3, "air", ("air","ground", "building"))
+        Hero.__init__(self, 258, 695, 1.5, 5, True, 3, "air", ("air","ground", "building"))
         self.position = position
         self.id=id
         self.move_image = [pygame.image.load('images/mega_minion_move_up1.png'),pygame.image.load('images/mega_minion_move_up2.png')
@@ -135,7 +135,7 @@ class Building :
 
 class King_tower (Building):
     def __init__(self,position,id,image):
-        Building.__init__(self,90,4500,1,15,"building",('air','ground','building'))
+        Building.__init__(self,6,4500,1,12,"building",('air','ground','building'))
         self.position=position
         self.image=[image,image,image,image]
         self.attack_image=[image,image,image,image]
@@ -146,7 +146,7 @@ class King_tower (Building):
 
 class Princess_tower (Building):
     def __init__(self,position,id,image):
-        Building.__init__(self,100,2800,0.8,16,"building",('air','ground','building'))
+        Building.__init__(self,7,2800,0.8,16,"building",('air','ground','building'))
         self.position=position
         self.image=[image,image,image,image]
         self.attack_image=[image,image,image,image]
@@ -233,7 +233,7 @@ def drop_card():
                 and elixirs_teem1 >= eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]],
                                                                             1).hero_cost:
             if towers[0] in destroyed_towers and towers[1] in destroyed_towers:
-                if trooplist_position[card_selected[1][1]] > 269 + 25 :
+                if trooplist_position[card_selected[1]][1] > 269 + 25 :
                     card_selected[0] = False
                     if 380<trooplist_position[card_selected[1]][1]<460 :
                         heros_in_game.append(eval(trooplist_name[card_selected[1]])((trooplist_position[card_selected[1]][0],460), 1))
@@ -243,6 +243,10 @@ def drop_card():
                     target_heros_in_game.append([])
                     elixirs_teem1 -= heros_in_game[-1].hero_cost
                     random_select_troop()
+                else:
+                    trooplist_position[card_selected[1]] = (
+                        605, window_height - (card_selected[1] + 1) * trooplist[card_selected[1]].get_size()[1])
+                    card_selected[0] = False
             elif towers[0] not in destroyed_towers and towers[1] not in destroyed_towers:
                 if trooplist_position[card_selected[1]][1] > red_image.get_size()[1]:
                     card_selected[0] = False
@@ -262,7 +266,7 @@ def drop_card():
                     card_selected[0] = False
             elif towers[0] not in destroyed_towers and towers[1] in destroyed_towers:
                 if trooplist_position[card_selected[1]][1] > red_image.get_size()[1] or \
-                        (trooplist_position[card_selected[1]][0] >= red_image.get_size()[0] and trooplist_position[card_selected[1][1]] > 269 + 25):
+                        (trooplist_position[card_selected[1]][0] >= red_image.get_size()[0] and trooplist_position[card_selected[1]][1] > 269 + 25):
                     card_selected[0] = False
                     if 380 < trooplist_position[card_selected[1]][1] < 460:
                         heros_in_game.append(
@@ -280,7 +284,7 @@ def drop_card():
                     card_selected[0] = False
             elif towers[0] in destroyed_towers and towers[1] not in destroyed_towers:
                 if trooplist_position[card_selected[1]][1] > red_image.get_size()[1] or \
-                        (trooplist_position[card_selected[1]][0] <= red_image.get_size()[0] and trooplist_position[card_selected[1][1]] > 269 + 25):
+                        (trooplist_position[card_selected[1]][0] <= red_image.get_size()[0] and trooplist_position[card_selected[1]][1] > 269 + 25):
                     card_selected[0] = False
                     if 380 < trooplist_position[card_selected[1]][1] < 460:
                         heros_in_game.append(
@@ -2061,14 +2065,14 @@ game_result=[0,0]
 game_result_before_extra_time=None
 last_elixir_given_time=0
 elixir_reload_time=2
-elixirs_teem1=0
-elixirs_teem2=0
+elixirs_teem1=3
+elixirs_teem2=3
 dictroop1 = {"Archer" :archer_card  , "Wizard" : wizard_card , "Giant" : giant_card
     , "Knight" : knight_card , "Mega_minion" : mega_minion_card , "Pekka" : pekka_card , "Balloon" : balloon_card}
 dictroop={}
 card_selected=[False,0]
-heros_in_game=[]
-attacking_heros_in_game=[]
+heros_in_game=[Giant((50,50),2),Knight((500,50),2)]
+attacking_heros_in_game=[False,False]
 target_heros_in_game=[[],[]]
 towers_in_game=[Princess_tower((10+75,20+75),2,pygame.image.load('images\Queen_tower_up.png')),Princess_tower((430+75,20+75),2,pygame.image.load('images\Queen_tower_up.png')),
                 Princess_tower((10+75, 650+75), 1, pygame.image.load('images\Queen_tower_down.png')),Princess_tower((430+75,650+75),1,pygame.image.load('images\Queen_tower_down.png')),
@@ -2132,9 +2136,9 @@ while True :
         show_forbidden_area()
         image_counter+=1
         drop_card()
-        if image_counter % 1 == 0:
+        if image_counter % 3 == 0:
             fire()
-        if image_counter % 6 == 0 :
+        if image_counter % 10 == 0 :
             move()
         if image_counter % 30 == 0 :
             move_up()
