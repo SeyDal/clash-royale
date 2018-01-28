@@ -47,7 +47,7 @@ class Balloon(Hero):
 
 class Pekka(Hero):
     def __init__(self,position,id):
-        Hero.__init__(self,598,1059,4,3,False,4,"ground",("ground","building"),8)
+        Hero.__init__(self,598,1059,6,3,False,4,"ground",("ground","building"),8)
         self.position=position
         self.id=id
         self.move_image = [pygame.image.load('images/pekka_move_up1.png'),pygame.image.load('images/pekka_move_up2.png')
@@ -60,7 +60,7 @@ class Pekka(Hero):
 
 class Archer(Hero):
     def __init__(self,position,id):
-        Hero.__init__(self,86,254,2,5,True,2,"ground",("air","ground","building"),10)
+        Hero.__init__(self,86,254,4,5,True,2,"ground",("air","ground","building"),10)
         self.position=position
         self.id=id
         self.move_image =[pygame.image.load('images/archer_move_up1.png'),pygame.image.load('images/archer_move_up2.png')
@@ -98,7 +98,7 @@ class Giant(Hero):
 
 class Knight(Hero):
     def __init__(self, position,id):
-        Hero.__init__(self, 159, 1399, 3, 4, False, 3, "ground", ("ground", "building"),12)
+        Hero.__init__(self, 159, 1399, 4, 4, False, 3, "ground", ("ground", "building"),12)
         self.position = position
         self.id=id
         self.move_image = [pygame.image.load('images/knight_move_up1.png'),pygame.image.load('images/knight_move_up2.png')
@@ -234,7 +234,7 @@ def drop_card():
                 and elixirs_teem1 >= eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]],
                                                                             1).hero_cost:
             if towers[0] in destroyed_towers and towers[1] in destroyed_towers:
-                if trooplist_position[card_selected[1]][1] > 269 + 25 :
+                if trooplist_position[card_selected[1]][1]+trooplist[card_selected[1]].get_size()[1]/2 > 269 + 25 :
                     card_selected[0] = False
                     if 380<trooplist_position[card_selected[1]][1]<460 :
                         heros_in_game.append(eval(trooplist_name[card_selected[1]])((trooplist_position[card_selected[1]][0],460), 1))
@@ -249,7 +249,7 @@ def drop_card():
                         605, window_height - (card_selected[1] + 1) * trooplist[card_selected[1]].get_size()[1])
                     card_selected[0] = False
             elif towers[0] not in destroyed_towers and towers[1] not in destroyed_towers:
-                if trooplist_position[card_selected[1]][1] > red_image.get_size()[1]:
+                if trooplist_position[card_selected[1]][1]+trooplist[card_selected[1]].get_size()[1]/2 > red_image.get_size()[1]:
                     card_selected[0] = False
                     if 380 < trooplist_position[card_selected[1]][1] < 460:
                         heros_in_game.append(
@@ -266,8 +266,8 @@ def drop_card():
                         605, window_height - (card_selected[1] + 1) * trooplist[card_selected[1]].get_size()[1])
                     card_selected[0] = False
             elif towers[0] not in destroyed_towers and towers[1] in destroyed_towers:
-                if trooplist_position[card_selected[1]][1] > red_image.get_size()[1] or \
-                        (trooplist_position[card_selected[1]][0] >= red_image.get_size()[0] and trooplist_position[card_selected[1]][1] > 269 + 25):
+                if trooplist_position[card_selected[1]][1]+trooplist[card_selected[1]].get_size()[1]/2 > red_image.get_size()[1] or \
+                        (trooplist_position[card_selected[1]][0]-trooplist[card_selected[1]].get_size()[0]/2 >= red_image.get_size()[0] and trooplist_position[card_selected[1]][1]+trooplist[card_selected[1]].get_size()[1]/2 > 269 + 25):
                     card_selected[0] = False
                     if 380 < trooplist_position[card_selected[1]][1] < 460:
                         heros_in_game.append(
@@ -284,8 +284,8 @@ def drop_card():
                         605, window_height - (card_selected[1] + 1) * trooplist[card_selected[1]].get_size()[1])
                     card_selected[0] = False
             elif towers[0] in destroyed_towers and towers[1] not in destroyed_towers:
-                if trooplist_position[card_selected[1]][1] > red_image.get_size()[1] or \
-                        (trooplist_position[card_selected[1]][0] <= red_image.get_size()[0] and trooplist_position[card_selected[1]][1] > 269 + 25):
+                if trooplist_position[card_selected[1]][1]+trooplist[card_selected[1]].get_size()[1]/2 > red_image.get_size()[1] or \
+                        (trooplist_position[card_selected[1]][0]-trooplist[card_selected[1]].get_size()[0]/2 <= red_image.get_size()[0] and trooplist[card_selected[1]][1]+trooplist_position[card_selected[1]].get_size()[1]/2 > 269 + 25):
                     card_selected[0] = False
                     if 380 < trooplist_position[card_selected[1]][1] < 460:
                         heros_in_game.append(
