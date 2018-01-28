@@ -147,8 +147,7 @@ class Princess_tower (Building):
 #functions
 def draw_map():
     '''draw map of the game at the first of the main while loop'''
-    global window
-    map_picture = pygame.image.load('images/field_3.jpg')
+    global window,map_picture
     window.fill((0,0,0))
     window.blit(map_picture,(0,0))
 
@@ -1388,6 +1387,7 @@ def show_heros_in_game (image_counter):
                     window.blit(hero.attack_image[3],pos)
 
 def fire() :
+    global game_result
     for hero1 in heros_in_game :
         shoot_result1=False
         for hero2 in heros_in_game :
@@ -1534,8 +1534,15 @@ def fire() :
                 if i in heros_in_game :
                     attacking_heros_in_game[heros_in_game.index(i)]=False
                     heros_in_game[heros_in_game.index(i)].weapon_image[1]=heros_in_game[heros_in_game.index(i)].position
-
             destroyed_towers.append(towers_in_game[k])
+            if towers_in_game[k].id==2:
+                game_result[0]+=1
+            else :
+                game_result[1]+=1
+            if towers[4] in destroyed_towers:
+                game_result[0] = 3
+            if towers[5] in destroyed_towers:
+                game_result[1] = 3
             del towers_in_game[k]
             del attacking_towers_in_game[k]
             del target_towers_in_game[k]
@@ -1817,11 +1824,86 @@ def show_forbidden_area():
         if towers[1] not in destroyed_towers :
             window.blit(red_image,(red_image.get_size()[0],0))
 
+def game_controler():
+    global end_game,game_result_before_extra_time
+    if game_result[0]>=3 or game_result[1]>=3 :
+        end_game=True
+    if GAME_TIME.get_ticks()==3*60*1000:
+        if game_result[0]!=game_result[1]:
+            end_game=True
+    if GAME_TIME.get_ticks()>3*60*1000:
+        if game_result[0]!=game_result[1]:
+            end_game=True
+    if GAME_TIME.get_ticks()>=4*60*1000:
+        end_game=True
+
+
+def show_crowns():
+    window.blit(pygame.image.load('images/red_crown.png'), (635, 200))
+    window.blit(pygame.image.load('images/blue_crown.png'), (640, 250))
+    font = pygame.font.SysFont("comicsansms", 32)
+    text1 = font.render(str(game_result[0]), True, (0, 0, 255))
+    text2=font.render(str(game_result[1]),True,(255,0,0))
+    window.blit(text1, (620 - text1.get_width() // 2, 275 - text1.get_height() // 2))
+    window.blit(text2, (620 - text2.get_width() // 2, 225 - text2.get_height() // 2))
+
+
+
+
+def start_menu():
+    global card_selected1,value,value_position,dictroop,dictroop1
+    for i in range(len(value)):
+        window.blit(value[i], value_position[i])
+    if pygame.mouse.get_pressed()[0] == True:
+        for i in range(len(value_position)):
+            if value_position[i][0] <= pygame.mouse.get_pos()[0] <= value_position[i][0] + \
+                    value[i].get_size()[0] \
+                    and value_position[i][1] <= pygame.mouse.get_pos()[1] <= value_position[i][1] + \
+                    value[i].get_size()[1] and card_selected1[0] == False:
+                card_selected1[0] = True
+                card_selected1[1] = i
+            if card_selected1[0] == True and card_selected1[1] == i:
+                mouse_pos = pygame.mouse.get_pos()
+                card_size = value[i].get_size()
+                if mouse_pos[0] < card_size[0] / 2:
+                    if mouse_pos[1] < card_size[1] / 2:
+                        value_position[i] = (0, 0)
+                    elif mouse_pos[1] > window_height - card_size[1] / 2:
+                        value_position[i] = (0, window_height - card_size[1])
+                    else:
+                        value_position[i] = (0, mouse_pos[1] - card_size[1] / 2)
+                elif mouse_pos[0] > window_width - card_size[0] / 2:
+                    if mouse_pos[1] < card_size[1] / 2:
+                        value_position[i] = (window_width - card_size[0], 0)
+                    elif mouse_pos[1] > window_height - card_size[1] / 2:
+                        value_position[i] = (window_width - card_size[0], window_height - card_size[1])
+                    else:
+                        value_position[i] = (window_width - card_size[0], mouse_pos[1] - card_size[1] / 2)
+                elif mouse_pos[1] < card_size[1] / 2:
+                    value_position[i] = (mouse_pos[0] - card_size[0] / 2, 0)
+                elif mouse_pos[1] > window_height - card_size[1] / 2:
+                    value_position[i] = (mouse_pos[0] - card_size[0] / 2, window_height - card_size[1])
+                else:
+                    value_position[i] = (pygame.mouse.get_pos()[0] - (value[i].get_size()[0] / 2),
+                                             pygame.mouse.get_pos()[1] - (value[i].get_size()[1] / 2))
+    elif card_selected1[0] == True:
+        i=card_selected1[1]
+        if 150<value_position[i][0]<550 and 360<value_position[i][1]<550 :
+            card_selected1[0]=False
+            dictroop[list(dictroop1.keys())[i]]=value[i]
+
+
+
+
+
+
+
 
 def quit_game():
     pygame.quit()
     sys.exit()
 #picture
+map_picture = None
 red_image=pygame.image.load('images/red.png')
 archer_card=pygame.image.load('images/ArcherCard.png')
 wizard_card=pygame.image.load('images/WizardCard.png')
@@ -1831,12 +1913,18 @@ knight_card=pygame.image.load('images/KnightCard.png')
 pekka_card=pygame.image.load('images/MiniPEKKACard.png')
 mega_minion_card=pygame.image.load('images/MegaMinionCard.png')
 #variables
+card_selected1=[False,0]
+start_game=False
+end_game=False
+game_result=[0,0]
+game_result_before_extra_time=None
 last_elixir_given_time=0
-elixir_reload_time=0
+elixir_reload_time=2
 elixirs_teem1=0
 elixirs_teem2=0
-dictroop = {"Archer" :archer_card  , "Wizard" : wizard_card , "Giant" : giant_card
-    , "Knight" : knight_card , "Mega_minion" : mega_minion_card , "Pekka" : pekka_card , "Balloon" : balloon_card }
+dictroop1 = {"Archer" :archer_card  , "Wizard" : wizard_card , "Giant" : giant_card
+    , "Knight" : knight_card , "Mega_minion" : mega_minion_card , "Pekka" : pekka_card , "Balloon" : balloon_card}
+dictroop={}
 card_selected=[False,0]
 heros_in_game=[]
 attacking_heros_in_game=[]
@@ -1844,6 +1932,15 @@ target_heros_in_game=[[],[]]
 towers_in_game=[Princess_tower((10+75,20+75),2,pygame.image.load('images\Queen_tower_up.png')),Princess_tower((430+75,20+75),2,pygame.image.load('images\Queen_tower_up.png')),
                 Princess_tower((10+75, 650+75), 1, pygame.image.load('images\Queen_tower_down.png')),Princess_tower((430+75,650+75),1,pygame.image.load('images\Queen_tower_down.png')),
                 King_tower((225+75,0+75),2,pygame.image.load('images\King_tower_up.png')),King_tower((225+75,650+75),1,pygame.image.load('images\King_tower_down.png'))]
+value=list(dictroop1.values())
+value_position=[]
+for i in range(7):
+    value_position.append(( value[i].get_size()[0] * i + 9*i ,60))
+for i in range(7, len(value)):
+    j = i - 7
+    value_position.append(( value[i].get_size()[0] * j + 9*j ,value[i].get_size()[1]+60))
+
+
 towers = towers_in_game[:]
 attacking_towers_in_game=[False,False,False,False,False,False]
 target_towers_in_game=[[],[],[],[],[],[]]
@@ -1874,24 +1971,50 @@ window=pygame.display.set_mode((window_width,window_height))
 image_counter=0
 
 while True :
-    print(pygame.mouse.get_pos())
-    draw_map()
-    show_forbidden_area()
-    image_counter+=1
-    drop_card()
-    if image_counter % 1 == 0:
-        fire()
-    if image_counter % 6 == 0 :
-        move()
-        move_up()
-    show_towers()
-    show_heros_in_game(image_counter)
-    show_time()
-    show_elixir()
-
     for event in GAME_EVENTS.get():
+        if event.type == pygame.KEYDOWN :
+            if event.key==pygame.K_1  :
+                map_picture = pygame.image.load('images/field_2.jpg')
+            if event.key==pygame.K_2 :
+                map_picture = pygame.image.load('images/field_1.jpg')
+            if event.key==pygame.K_3 :
+                map_picture = pygame.image.load('images/field_3.jpg')
+            if event.key == pygame .K_SPACE and len(dictroop)>5 and map_picture!=None :
+                start_game = True
         if event.type == GAME_GLOBALS.QUIT:
             quit_game()
+    if start_game==False :
+        window.blit(pygame.image.load('images/menu.png'),(0,0))
+        start_menu()
+    elif end_game==False and start_game==True :
+        draw_map()
+        show_forbidden_area()
+        image_counter+=1
+        drop_card()
+        if image_counter % 1 == 0:
+            fire()
+        if image_counter % 6 == 0 :
+            move()
+            move_up()
+        show_towers()
+        show_heros_in_game(image_counter)
+        show_time()
+        show_elixir()
+        show_crowns()
+        game_controler()
+        print(game_result,end_game)
+
+    elif end_game==True:
+        draw_map()
+        show_towers()
+        if game_result[0]>game_result[1]:
+            window.blit(pygame.image.load('images/Blue_winner.png'),(0,0))
+        elif game_result[1]>game_result[0]:
+            window.blit(pygame.image.load('images/Red_winner.png'),(0,0))
+        else:
+            window.blit(pygame.image.load('images/field2.png'),(0,0))
+
+
     pygame.display.update()
 
 
