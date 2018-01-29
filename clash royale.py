@@ -16,6 +16,33 @@ class Hero :
         self.target=target
         self.speed=speed
 
+class Inferno(Hero):
+    def __init__(self,position,id):
+        Hero.__init__(self,50,1500,4,8,True,2,"building",("air","ground","building"),10)
+        self.position=position
+        self.id=id
+        self.move_image =[pygame.image.load('images/Inferno.png'),pygame.image.load('images/Inferno.png')
+            ,pygame.image.load('images/Inferno.png'),pygame.image.load('images/Inferno.png')]
+        self.attack_image=[pygame.image.load('images/Inferno.png'),pygame.image.load('images/Inferno.png')
+            ,pygame.image.load('images/Inferno.png'),pygame.image.load('images/Inferno.png')]
+        self.weapon_image = [pygame.image.load ("images/Inferno_arrow.png") , self.position]
+        self.max_health = 1500
+
+
+class Tesla(Hero):
+    def __init__(self,position,id):
+        Hero.__init__(self,55,1500,4,10,True,2,"building",("air","ground","building"),10)
+        self.position=position
+        self.id=id
+        self.move_image =[pygame.image.load('images/Tesla.png'),pygame.image.load('images/Tesla.png')
+            ,pygame.image.load('images/Tesla.png'),pygame.image.load('images/Tesla.png')]
+        self.attack_image=[pygame.image.load('images/Tesla.png'),pygame.image.load('images/Tesla.png')
+            ,pygame.image.load('images/Tesla.png'),pygame.image.load('images/Tesla.png')]
+        self.weapon_image = [pygame.image.load ("images/Tesla_arrow.png") , self.position]
+        self.max_health = 1500
+
+
+
 class Wizard(Hero):
     def __init__(self,position,id):
         Hero.__init__(self,228,598,4,8,True,5,"ground",("air","ground","building"),10)
@@ -70,18 +97,7 @@ class Archer(Hero):
         self.weapon_image = [pygame.image.load ("images/Archer_arrow.png") , self.position]
         self.max_health = 254
 
-class Power :
-    def __init__(self,position,id):
-        self.radius=5
-        self.duration=7.5
-        self.boost=35
-        self.hero_cost=3
-        self.position=position
-        self.id=id
-        self.move_image =[pygame.image.load(),pygame.image.load(),pygame.image.load(),pygame.image.load()]
-        self.attack_image=[pygame.image.load(),pygame.image.load(),pygame.image.load(),pygame.image.load()]
-        self.weapon_image = [pygame.image.load ("images/weapon.png") , self.position]
-        self.max_health = 0
+
 
 
 class Giant(Hero):
@@ -1362,8 +1378,6 @@ def move_up():
 
 
 
-
-
 def show_heros_in_game (image_counter):
     for hero in heros_in_game :
         if attacking_heros_in_game[heros_in_game.index(hero)]==False :
@@ -1680,7 +1694,10 @@ def Hoooosh():
                         target_heros_in_game.append([])
 
 
-
+def InTesla () :
+    for tower in heros_in_game :
+        if tower.type == "building" :
+            tower.hit_point -= 2
 
 def shoot2(target_position , weapon_image , tower , hero):
     if target_position[0] - 15 < weapon_image[1][0]  and target_position[0] +15 > weapon_image[1][0] :
@@ -2062,6 +2079,8 @@ def game_sound():
         battle_sound_play_counter+=1
 
 
+
+
 def quit_game():
     pygame.quit()
     sys.exit()
@@ -2073,6 +2092,8 @@ battle_sound=pygame.mixer.Sound('sounds/battle.ogg')
 battle_sound.set_volume(0.2)
 
 map_picture = None
+Tesla_card = pygame.image.load('images/TeslaCard.png')
+Inferno_card = pygame.image.load('images/InfernoCard.png')
 red_image=pygame.image.load('images/red.png')
 archer_card=pygame.image.load('images/ArcherCard.png')
 wizard_card=pygame.image.load('images/WizardCard.png')
@@ -2092,12 +2113,12 @@ elixir_reload_time=2
 elixirs_teem1=3
 elixirs_teem2=3
 dictroop1 = {"Archer" :archer_card  , "Wizard" : wizard_card , "Giant" : giant_card
-    , "Knight" : knight_card , "Mega_minion" : mega_minion_card , "Pekka" : pekka_card , "Balloon" : balloon_card}
+    , "Knight" : knight_card , "Mega_minion" : mega_minion_card , "Pekka" : pekka_card , "Balloon" : balloon_card , "Inferno" : Inferno_card , "Tesla" : Tesla_card}
 dictroop={}
 card_selected=[False,0]
-heros_in_game=[]
-attacking_heros_in_game=[]
-target_heros_in_game=[]
+heros_in_game=[Tesla((450,300),2),Inferno((500,200),2)]
+attacking_heros_in_game=[False,False]
+target_heros_in_game=[[],[]]
 towers_in_game=[Princess_tower((10+75,20+75),2,pygame.image.load('images\Queen_tower_up.png')),Princess_tower((430+75,20+75),2,pygame.image.load('images\Queen_tower_up.png')),
                 Princess_tower((10+75, 650+75), 1, pygame.image.load('images\Queen_tower_down.png')),Princess_tower((430+75,650+75),1,pygame.image.load('images\Queen_tower_down.png')),
                 King_tower((225+75,0+75),2,pygame.image.load('images\King_tower_up.png')),King_tower((225+75,650+75),1,pygame.image.load('images\King_tower_down.png'))]
@@ -2164,6 +2185,8 @@ while True :
         image_counter+=1
         drop_card()
         fire()
+        if image_counter % 50 :
+            InTesla()
         move()
         move_up()
         show_towers()
