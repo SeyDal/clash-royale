@@ -18,7 +18,7 @@ class Hero :
 
 class Inferno(Hero):
     def __init__(self,position,id):
-        Hero.__init__(self,50,1500,4,8,True,5,"building",("air","ground","building"),10)
+        Hero.__init__(self,200,1500,4,12,True,5,"building",("air","ground","building"),10)
         self.position=position
         self.id=id
         self.move_image =[pygame.image.load('images/Inferno.png'),pygame.image.load('images/Inferno.png')
@@ -31,7 +31,7 @@ class Inferno(Hero):
 
 class Tesla(Hero):
     def __init__(self,position,id):
-        Hero.__init__(self,55,1500,4,10,False,4,"building",("air","ground","building"),10)
+        Hero.__init__(self,150,1500,4,10,False,4,"building",("air","ground","building"),10)
         self.position=position
         self.id=id
         self.move_image =[pygame.image.load('images/Tesla.png'),pygame.image.load('images/Tesla.png')
@@ -60,7 +60,7 @@ class Wizard(Hero):
 
 class Balloon(Hero):
     def __init__(self,position,id):
-        Hero.__init__(self,798,1396,5,2,False,5,"air",("building"),15)
+        Hero.__init__(self,798,1696,5,2,False,5,"air",("building"),15)
         self.position=position
         self.id=id
         self.move_image = [pygame.image.load('images/balloon1.png'),pygame.image.load('images/balloon1.png')
@@ -74,7 +74,7 @@ class Balloon(Hero):
 
 class Pekka(Hero):
     def __init__(self,position,id):
-        Hero.__init__(self,598,1059,6,3,False,4,"ground",("ground","building"),8)
+        Hero.__init__(self,400,1059,6,4,False,4,"ground",("ground","building"),8)
         self.position=position
         self.id=id
         self.move_image = [pygame.image.load('images/pekka_move_up1.png'),pygame.image.load('images/pekka_move_up2.png')
@@ -87,14 +87,14 @@ class Pekka(Hero):
 
 class Archer(Hero):
     def __init__(self,position,id):
-        Hero.__init__(self,86,254,4,5,True,2,"ground",("air","ground","building"),10)
+        Hero.__init__(self,120,254,4,6,False,2,"ground",("air","ground","building"),10)
         self.position=position
         self.id=id
         self.move_image =[pygame.image.load('images/archer_move_up1.png'),pygame.image.load('images/archer_move_up2.png')
             ,pygame.image.load('images/archer_move_down1.png'),pygame.image.load('images/archer_move_down2.png')]
         self.attack_image=[pygame.image.load('images/archer_attack_up1.png'),pygame.image.load('images/archer_attack_up2.png')
             ,pygame.image.load('images/archer_attack_down1.png'),pygame.image.load('images/archer_attack_down2.png')]
-        self.weapon_image = [pygame.image.load ("images/Archer_arrow.png") , self.position]
+        self.weapon_image = [pygame.image.load ("images/Queen_tower_arrow.png") , self.position]
         self.max_health = 254
 
 
@@ -152,7 +152,7 @@ class Building :
 
 class King_tower (Building):
     def __init__(self,position,id,image):
-        Building.__init__(self,6,4500,1,12,"building",('air','ground','building'))
+        Building.__init__(self,100,4500,1,8,"building",('air','ground','building'))
         self.position=position
         self.image=[image,image,image,image]
         self.attack_image=[image,image,image,image]
@@ -163,7 +163,7 @@ class King_tower (Building):
 
 class Princess_tower (Building):
     def __init__(self,position,id,image):
-        Building.__init__(self,7,2800,2,16,"building",('air','ground','building'))
+        Building.__init__(self,65,2800,2,16,"building",('air','ground','building'))
         self.position=position
         self.image=[image,image,image,image]
         self.attack_image=[image,image,image,image]
@@ -1435,7 +1435,9 @@ def show_heros_in_game (image_counter):
                                      (hero.position[0] - hero.move_image[0].get_size()[0] / 2 + 50,
                                       hero.position[1] - hero.move_image[0].get_size()[1] / 2 + 40,
                                       (hero.hit_point / hero.max_health) * 50, 7))
+
         else :
+
             if hero.id==1 :
                 if image_counter % (hero.hit_speed*16) < hero.hit_speed*8:
                     pos = (hero.position[0] - hero.move_image[0].get_size()[0] / 2,
@@ -1459,6 +1461,9 @@ def show_heros_in_game (image_counter):
                                      (hero.position[0] - hero.move_image[0].get_size()[0] / 2 + 50,
                                       hero.position[1] - hero.move_image[0].get_size()[1] / 2 + 40,
                                       (hero.hit_point / hero.max_health) * 50, 7))
+                window.blit(hero.weapon_image[0], (hero.weapon_image[1][0] - hero.weapon_image[0].get_size()[0] / 2,
+                                                    hero.weapon_image[1][1] - hero.weapon_image[0].get_size()[1] / 2))
+
             if hero.id==2 :
                 if image_counter % (16*hero.hit_speed) < 8*hero.hit_speed:
                     pos = (hero.position[0] - hero.move_image[2].get_size()[0] / 2,
@@ -1482,6 +1487,9 @@ def show_heros_in_game (image_counter):
                                      (hero.position[0] - hero.move_image[0].get_size()[0] / 2 + 50,
                                       hero.position[1] - hero.move_image[0].get_size()[1] / 2 + 40,
                                       (hero.hit_point / hero.max_health) * 50, 7))
+                window.blit(hero.weapon_image[0], (hero.weapon_image[1][0] - hero.weapon_image[0].get_size()[0] / 2,
+                                                    hero.weapon_image[1][1] - hero.weapon_image[0].get_size()[1] / 2))
+
 
 def fire() :
     global game_result
@@ -1657,7 +1665,7 @@ def area_damage():
                     y1 = hero2.position[1]
                     distance = ((x - x1)**2 + (y-y1)**2)**0.5
                     if distance / 20 <= hero1.range and (hero2.type in hero1.target):
-                        hero2.hit_point -= hero1.area_damage
+                        hero2.hit_point -= hero1.damage/2
             for tower in towers_in_game :
                 if hero1.id != tower.id :
                     x = hero1.position[0]
@@ -1666,7 +1674,7 @@ def area_damage():
                     y1 = tower.position[1]
                     distance = ((x - x1) ** 2 + (y - y1) ** 2) ** 0.5
                     if distance / 20 <= hero1.range :
-                        tower.hit_point -= hero1.area_damage
+                        tower.hit_point -= hero1.damage/2
 
 def hoosh():
     global heros_in_use,attacking_heros_in_game,heros_in_game,target_heros_in_game,last_card,last_card_check,elixirs_teem2
@@ -1676,36 +1684,39 @@ def hoosh():
         if i.id == 1:
             enemy_number += 1
 
-    rand_x1 = random.randint(80, 130)
-    rand_y = random.randint(200, 300)
-    rand_x2 = random.randint(500, 520)
+    rand_x1 = random.randint(50, 170)
+    rand_y = random.randint(200, 350)
+    rand_x2 = random.randint(400, 550)
     if enemy_number == 0:
         if len(heros_in_game) != 0:
             for hero in heros_in_game :
                 if type(hero) in [type(Giant((0,0),2)),type(Balloon((0,0),2)),type(Knight((0,0),2))] :
                     for hero1 in [Archer((hero.position[0],320),2),Wizard((hero.position[0],320),2),Mega_minion((hero.position[0],320),2)]:
                         if type(hero1) in heros_in_use2 and hero1.hero_cost <= elixirs_teem2 :
-                            heros_in_game.append(hero1)
-                            attacking_heros_in_game.append(False)
-                            target_heros_in_game.append([])
-                            elixirs_teem2-=hero1.hero_cost
+                            if elixirs_teem2 - hero1.hero_cost >= 0 :
+                                heros_in_game.append(hero1)
+                                attacking_heros_in_game.append(False)
+                                target_heros_in_game.append([])
+                                elixirs_teem2-=hero1.hero_cost
 
                 if type(hero) in [type(Wizard((0,0),2)),type(Archer((0,0),2)),type(Mega_minion((0,0),2))] :
                     for hero1 in [Giant((hero.position[0],320),2),Balloon((hero.position[0],320),2),Pekka((hero.position[0],320),2),Knight((hero.position[0],320),2)]:
                         if type(hero1) in heros_in_use2 and hero1.hero_cost <= elixirs_teem2 :
-                            heros_in_game.append(hero1)
-                            attacking_heros_in_game.append(False)
-                            target_heros_in_game.append([])
-                            elixirs_teem2-=hero1.hero_cost
+                            if elixirs_teem2 - hero1.hero_cost >= 0:
+                                heros_in_game.append(hero1)
+                                attacking_heros_in_game.append(False)
+                                target_heros_in_game.append([])
+                                elixirs_teem2-=hero1.hero_cost
 
         elif elixirs_teem2==8 :
             for hero in [Mega_minion((random.choice([rand_x1,rand_x2]),rand_y),2),Archer((random.choice([rand_x1,rand_x2]),rand_y),2)]:
                 if  type(hero) in heros_in_use2 :
-                    heros_in_game.append(hero)
-                    attacking_heros_in_game.append(False)
-                    target_heros_in_game.append([])
-                    elixirs_teem2 -= hero.hero_cost
-                    break
+                    if elixirs_teem2 - hero.hero_cost >= 0:
+                        heros_in_game.append(hero)
+                        attacking_heros_in_game.append(False)
+                        target_heros_in_game.append([])
+                        elixirs_teem2 -= hero.hero_cost
+                        break
 
 
     elif last_card in heros_in_game and  last_card_check == False:
@@ -1714,21 +1725,36 @@ def hoosh():
                 hero=eval(i+'((0,0),2)')
                 if hero.type not in last_card.target and last_card.type in hero.target :
                     if hero.hero_cost <= elixirs_teem2 :
-                        elixirs_teem2-=hero.hero_cost
-                        last_card_check=True
-                        if last_card.position[0]<300 :
-                            heros_in_game.append(eval(i+'('+str((rand_x1,rand_y))+',2)'))
-                            attacking_heros_in_game.append(False)
-                            target_heros_in_game.append([])
-                        else:
-                            heros_in_game.append(eval(i+'('+str((rand_x2,rand_y))+',2)'))
-                            attacking_heros_in_game.append(False)
-                            target_heros_in_game.append([])
-                        return None
+                        if elixirs_teem2 - hero.hero_cost >= 0:
+                            elixirs_teem2-=hero.hero_cost
+                            last_card_check=True
+                            if last_card.position[0]<300 :
+                                heros_in_game.append(eval(i+'('+str((rand_x1,rand_y))+',2)'))
+                                attacking_heros_in_game.append(False)
+                                target_heros_in_game.append([])
+                            else:
+                                heros_in_game.append(eval(i+'('+str((rand_x2,rand_y))+',2)'))
+                                attacking_heros_in_game.append(False)
+                                target_heros_in_game.append([])
+                            return None
             for i in heros_in_use :
                 hero=eval(i+'((0,0),2)')
                 if last_card.target==("building") :
                     if hero.type=="building" :
+                        if elixirs_teem2 - hero.hero_cost >= 0:
+                            elixirs_teem2 -= hero.hero_cost
+                            last_card_check = True
+                            if last_card.position[0] < 300:
+                                heros_in_game.append(eval(i +'('+ str((rand_x1, rand_y))+',2)'))
+                                attacking_heros_in_game.append(False)
+                                target_heros_in_game.append([])
+                            else:
+                                heros_in_game.append(eval(i +'('+ str((rand_x2, rand_y))+',2)'))
+                                attacking_heros_in_game.append(False)
+                                target_heros_in_game.append([])
+                            return None
+                elif  hero.target==("ground","building","air") and image_counter%100==0:
+                    if elixirs_teem2 - hero.hero_cost >= 0:
                         elixirs_teem2 -= hero.hero_cost
                         last_card_check = True
                         if last_card.position[0] < 300:
@@ -1741,32 +1767,95 @@ def hoosh():
                             target_heros_in_game.append([])
                         return None
                 elif type(last_card)==type(hero) :
-                    elixirs_teem2 -= hero.hero_cost
-                    last_card_check = True
-                    if last_card.position[0] < 300:
-                        heros_in_game.append(eval(i + '(' + str((rand_x1, rand_y)) + ',2)'))
-                        attacking_heros_in_game.append(False)
-                        target_heros_in_game.append([])
-                    else:
-                        heros_in_game.append(eval(i + '(' + str((rand_x2, rand_y)) + ',2)'))
-                        attacking_heros_in_game.append(False)
-                        target_heros_in_game.append([])
-                    return None
-                elif last_card.target==("building") :
-                    elixirs_teem2 -= hero.hero_cost
-                    last_card_check = True
-                    if last_card.position[0] < 300:
-                        heros_in_game.append(eval(i +'('+ str((rand_x1, rand_y))+',2)'))
-                        attacking_heros_in_game.append(False)
-                        target_heros_in_game.append([])
-                    else:
-                        heros_in_game.append(eval(i +'('+ str((rand_x2, rand_y))+',2)'))
-                        attacking_heros_in_game.append(False)
-                        target_heros_in_game.append([])
-                    return None
+                    if elixirs_teem2 - hero.hero_cost >= 0:
+                        elixirs_teem2 -= hero.hero_cost
+                        last_card_check = True
+                        if last_card.position[0] < 300:
+                            heros_in_game.append(eval(i + '(' + str((rand_x1, rand_y)) + ',2)'))
+                            attacking_heros_in_game.append(False)
+                            target_heros_in_game.append([])
+                        else:
+                            heros_in_game.append(eval(i + '(' + str((rand_x2, rand_y)) + ',2)'))
+                            attacking_heros_in_game.append(False)
+                            target_heros_in_game.append([])
+                        return None
 
 
 
+def hooshang () :
+    global heros_in_use, attacking_heros_in_game, heros_in_game, target_heros_in_game, last_card_check, elixirs_teem2
+    long_range_troops = ["Wizard", "Mega_minion"]
+    enemy_number = 0
+    for i in heros_in_game:
+        if i.id == 1:
+            enemy_number += 1
+
+    rand_x1 = random.randint(50, 170)
+    rand_y = random.randint(200, 300)
+    rand_x2 = random.randint(400, 550)
+
+    if enemy_number > 0 :
+        for last_card in heros_in_game :
+            if last_card.id == 1 and last_card.position[1] < 369 :
+                if elixirs_teem2 > 4:
+                    for i in heros_in_use:
+                        hero = eval(i + '((0,0),2)')
+                        if hero.type not in last_card.target and last_card.type in hero.target:
+                            if hero.hero_cost <= elixirs_teem2:
+                                if elixirs_teem2 - hero.hero_cost >= 0:
+                                    elixirs_teem2 -= hero.hero_cost
+                                    last_card_check = True
+                                    if last_card.position[0] < 300:
+                                        heros_in_game.append(eval(i + '(' + str((rand_x1, rand_y)) + ',2)'))
+                                        attacking_heros_in_game.append(False)
+                                        target_heros_in_game.append([])
+                                    else:
+                                        heros_in_game.append(eval(i + '(' + str((rand_x2, rand_y)) + ',2)'))
+                                        attacking_heros_in_game.append(False)
+                                        target_heros_in_game.append([])
+                                    return None
+                    for i in heros_in_use:
+                        hero = eval(i + '((0,0),2)')
+                        if last_card.target == ("building"):
+                            if hero.type == "building":
+                                if elixirs_teem2 - hero.hero_cost >= 0:
+                                    elixirs_teem2 -= hero.hero_cost
+                                    last_card_check = True
+                                    if last_card.position[0] < 300:
+                                        heros_in_game.append(eval(i + '(' + str((rand_x1, rand_y)) + ',2)'))
+                                        attacking_heros_in_game.append(False)
+                                        target_heros_in_game.append([])
+                                    else:
+                                        heros_in_game.append(eval(i + '(' + str((rand_x2, rand_y)) + ',2)'))
+                                        attacking_heros_in_game.append(False)
+                                        target_heros_in_game.append([])
+                                    return None
+                        elif hero.type == "building" and image_counter%200==0:
+                            if elixirs_teem2 - hero.hero_cost >= 0:
+                                elixirs_teem2 -= hero.hero_cost
+                                last_card_check = True
+                                if last_card.position[0] < 300:
+                                    heros_in_game.append(eval(i + '(' + str((rand_x1, rand_y)) + ',2)'))
+                                    attacking_heros_in_game.append(False)
+                                    target_heros_in_game.append([])
+                                else:
+                                    heros_in_game.append(eval(i + '(' + str((rand_x2, rand_y)) + ',2)'))
+                                    attacking_heros_in_game.append(False)
+                                    target_heros_in_game.append([])
+                                return None
+                        elif type(last_card) == type(hero):
+                            if elixirs_teem2 - hero.hero_cost >= 0:
+                                elixirs_teem2 -= hero.hero_cost
+                                last_card_check = True
+                                if last_card.position[0] < 300:
+                                    heros_in_game.append(eval(i + '(' + str((rand_x1, rand_y)) + ',2)'))
+                                    attacking_heros_in_game.append(False)
+                                    target_heros_in_game.append([])
+                                else:
+                                    heros_in_game.append(eval(i + '(' + str((rand_x2, rand_y)) + ',2)'))
+                                    attacking_heros_in_game.append(False)
+                                    target_heros_in_game.append([])
+                                return None
 
 
 
@@ -1776,114 +1865,127 @@ def InTesla () :
             tower.hit_point -= 1
 
 def shoot2(target_position , weapon_image , tower , hero):
+
     if target_position[0] - 15 < weapon_image[1][0]  and target_position[0] +15 > weapon_image[1][0] :
         if target_position[1] -20 < weapon_image[1][1]  and target_position[1] +20 > weapon_image[1][1]  :
             hero.hit_point -= tower.damage
             attacking_towers_in_game[towers_in_game.index(tower)] = False
             weapon_image[1] = tower.position
-    print(hero)
     x1 = weapon_image[1][0]
     y1 = weapon_image[1][1]
-    a = 10
-    t = 20
+    a = 5
+    b = 10
+    t = 10
     if x1 > target_position[0]:
         if y1 > target_position[1]:
             if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
                 if x1 < target_position[0] + a and x1 > target_position[0] - a:
-                    x1 -= a/2
+                    x1 -= a
                 else:
                     x1 -= a
                 try:
                     y1 -= abs((target_position[1] - y1) / (target_position[0] - x1)) * t
                 except:
-                    y1 = weapon_image[1][1] - 10
-                if abs(weapon_image[1][1] - y1) > 10:
-                    y1 = weapon_image[1][1] - 10
+                    y1 = weapon_image[1][1] - b
+                if abs(weapon_image[1][1] - y1) > b:
+                    y1 = weapon_image[1][1] - b
                 if abs(weapon_image[1][1] - y1) < 1:
                     y1 = weapon_image[1][1] - 1
             else:
-                y1 -= a
+                if y1 < target_position[1] + a and y1 > target_position[1] - a:
+                    y1 -= a
+                else:
+                    y1 -= a
                 try:
                     x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * t
                 except:
-                    x1 = weapon_image[1][0] - 10
-                if abs(weapon_image[1][0] - x1) > 10:
-                    x1 = weapon_image[1][0] - 10
+                    x1 = weapon_image[1][0] - b
+                if abs(weapon_image[1][0] - x1) > b:
+                    x1 = weapon_image[1][0] - b
                 if abs(weapon_image[1][0] - x1) < 1:
                     x1 = weapon_image[1][0] - 1
 
         else:
             if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
                 if x1 < target_position[0] + a and x1 > target_position[0] - a:
-                    x1 -= a/2
+                    x1 -= a
                 else:
                     x1 -= a
                 try:
                     y1 += abs((target_position[1] - y1) / (target_position[0] - x1)) * t
                 except:
-                    y1 = weapon_image[1][1] + 10
-                if abs(weapon_image[1][1] - y1) > 10:
-                    y1 = weapon_image[1][1] + 10
+                    y1 = weapon_image[1][1] + b
+                if abs(weapon_image[1][1] - y1) > b:
+                    y1 = weapon_image[1][1] + b
                 if abs(weapon_image[1][1] - y1) < 1:
                     y1 = weapon_image[1][1] + 1
             else:
-                y1 += a
+                if y1 < target_position[1] + a and y1 > target_position[1] - a:
+                    y1 += a
+                else:
+                    y1 += a
                 try:
                     x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * t
                 except:
-                    x1 = weapon_image[1][0] - 10
-                if abs(weapon_image[1][0] - x1) > 10:
-                    x1 = weapon_image[1][0] - 10
+                    x1 = weapon_image[1][0] - b
+                if abs(weapon_image[1][0] - x1) > b:
+                    x1 = weapon_image[1][0] - b
                 if abs(weapon_image[1][0] - x1) < 1:
                     x1 = weapon_image[1][0] - 1
 
     elif y1 < target_position[1]:
         if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
             if x1 < target_position[0] + a and x1 > target_position[0] - a:
-                x1 += a/2
+                x1 += a
             else:
                 x1 += a
             try:
                 y1 += abs((target_position[1] - y1) / (target_position[0] - x1)) * t
             except:
-                y1 = weapon_image[1][1] + 10
-            if abs(weapon_image[1][1] - y1) > 10:
-                y1 = weapon_image[1][1] + 10
+                y1 = weapon_image[1][1] + b
+            if abs(weapon_image[1][1] - y1) > b:
+                y1 = weapon_image[1][1] + b
             if abs(weapon_image[1][1] - y1) < 1:
                 y1 = weapon_image[1][1] + 1
         else:
-            y1 += a
+            if y1 < target_position[1] + a and y1 > target_position[1] - a:
+                y1 += a
+            else:
+                y1 += a
             try:
                 x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * t
             except:
-                x1 = weapon_image[1][0] + 10
-            if abs(weapon_image[1][0] - x1) > 10:
-                x1 = weapon_image[1][0] + 10
+                x1 = weapon_image[1][0] + b
+            if abs(weapon_image[1][0] - x1) > b:
+                x1 = weapon_image[1][0] + b
             if abs(weapon_image[1][0] - x1) < 1:
                 x1 = weapon_image[1][0] + 1
 
     else:
         if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
             if x1 < target_position[0] + a and x1 > target_position[0] - a:
-                x1 += a/2
+                x1 += a
             else:
                 x1 += a
             try:
                 y1 -= abs((target_position[1] - y1) / (target_position[0] - x1)) * t
             except:
-                y1 = weapon_image[1][1] - 10
-            if abs(weapon_image[1][1] - y1) > 10:
-                y1 = weapon_image[1][1] - 10
+                y1 = weapon_image[1][1] - b
+            if abs(weapon_image[1][1] - y1) > b:
+                y1 = weapon_image[1][1] - b
             if abs(weapon_image[1][1] - y1) < 1:
                 y1 = weapon_image[1][1] - 1
         else:
-            y1 -= a
+            if y1 < target_position[1] + a and y1 > target_position[1] - a:
+                y1 -= a
+            else:
+                y1 -= a
             try:
                 x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * t
             except:
-                x1 = weapon_image[1][0] + 10
-            if abs(weapon_image[1][0] - x1) > 10:
-                x1 = weapon_image[1][0] + 10
+                x1 = weapon_image[1][0] + b
+            if abs(weapon_image[1][0] - x1) > b:
+                x1 = weapon_image[1][0] + b
             if abs(weapon_image[1][0] - x1) < 1:
                 x1 = weapon_image[1][0] + 1
     weapon_image[1] = (x1, y1)
@@ -1900,105 +2002,118 @@ def shoot(target_position , weapon_image , hero1 , hero2):
     x1 = weapon_image[1][0]
     y1 = weapon_image[1][1]
     a = 5
+    b= 10
     t = 10
     if x1 > target_position[0]:
         if y1 > target_position[1] :
             if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
                 if x1 < target_position[0] + a and x1 > target_position[0] - a:
-                    x1 -= a/2
+                    x1 -= a
                 else:
                     x1 -= a
                 try :
                     y1 -= abs((target_position[1] - y1) / (target_position[0] - x1))*t
                 except :
-                    y1 = weapon_image[1][1] - 10
-                if abs(weapon_image[1][1] - y1) > 10 :
-                    y1 = weapon_image[1][1] - 10
+                    y1 = weapon_image[1][1] - b
+                if abs(weapon_image[1][1] - y1) > b :
+                    y1 = weapon_image[1][1] - b
                 if abs(weapon_image[1][1] - y1) < 1 :
                     y1 = weapon_image[1][1] - 1
             else :
-                y1 -= a
+                if y1 < target_position[1] + a and y1 > target_position[1] - a:
+                    y1 -= a
+                else:
+                    y1 -= a
                 try:
                     x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * t
                 except:
-                    x1 = weapon_image[1][0] - 10
-                if abs(weapon_image[1][0] - x1) > 10:
-                    x1 = weapon_image[1][0] - 10
+                    x1 = weapon_image[1][0] - b
+                if abs(weapon_image[1][0] - x1) > b:
+                    x1 = weapon_image[1][0] - b
                 if abs(weapon_image[1][0] - x1) < 1:
                     x1 = weapon_image[1][0] - 1
 
         else:
             if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
                 if x1 < target_position[0] + a and x1 > target_position[0] - a:
-                    x1 -= a/2
+                    x1 -= a
                 else:
                     x1 -= a
                 try :
                     y1 += abs((target_position[1] - y1) / (target_position[0] - x1))*t
                 except :
-                    y1 = weapon_image[1][1] + 10
-                if abs(weapon_image[1][1] - y1) > 10 :
-                    y1 = weapon_image[1][1] + 10
+                    y1 = weapon_image[1][1] + b
+                if abs(weapon_image[1][1] - y1) > b :
+                    y1 = weapon_image[1][1] + b
                 if abs(weapon_image[1][1] - y1) < 1 :
                     y1 = weapon_image[1][1] + 1
             else :
-                y1 += a
+                if y1 < target_position[1] + a and y1 > target_position[1] - a:
+                    y1 += a
+                else:
+                    y1 += a
                 try:
                     x1 -= abs((target_position[0] - x1) / (target_position[1] - y1)) * t
                 except:
-                    x1 = weapon_image[1][0] - 10
-                if abs(weapon_image[1][0] - x1) > 10:
-                    x1 = weapon_image[1][0] - 10
+                    x1 = weapon_image[1][0] - b
+                if abs(weapon_image[1][0] - x1) > b:
+                    x1 = weapon_image[1][0] - b
                 if abs(weapon_image[1][0] - x1) < 1:
                     x1 = weapon_image[1][0] - 1
 
     elif y1 < target_position[1] :
         if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
             if x1 < target_position[0] + a and x1 > target_position[0] - a:
-                x1 += a/2
+                x1 += a
             else:
                 x1 += a
             try:
                 y1 += abs((target_position[1] - y1) / (target_position[0] - x1)) * t
             except:
-                y1 = weapon_image[1][1] + 10
-            if abs(weapon_image[1][1] - y1) > 10:
-                y1 = weapon_image[1][1] + 10
+                y1 = weapon_image[1][1] + b
+            if abs(weapon_image[1][1] - y1) > b:
+                y1 = weapon_image[1][1] + b
             if abs(weapon_image[1][1] - y1) < 1:
                 y1 = weapon_image[1][1] + 1
         else:
-            y1 += a
+            if y1 < target_position[1] + a and y1 > target_position[1] - a:
+                y1 += a
+            else:
+                y1 += a
             try:
                 x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * t
             except:
-                x1 = weapon_image[1][0] + 10
-            if abs(weapon_image[1][0] - x1) > 10:
-                x1 = weapon_image[1][0] + 10
+                x1 = weapon_image[1][0] + b
+            if abs(weapon_image[1][0] - x1) > b:
+                x1 = weapon_image[1][0] + b
             if abs(weapon_image[1][0] - x1) < 1:
                 x1 = weapon_image[1][0] + 1
 
     else :
         if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
             if x1 < target_position[0] + a and x1 > target_position[0] - a:
-                x1 += a/2
+                x1 += a
             else:
                 x1 += a
             try:
                 y1 -= abs((target_position[1] - y1) / (target_position[0] - x1)) * t
             except:
-                y1 = weapon_image[1][1] - 10
-            if abs(weapon_image[1][1] - y1) > 10:
-                y1 = weapon_image[1][1] - 10
+                y1 = weapon_image[1][1] - b
+            if abs(weapon_image[1][1] - y1) > b:
+                y1 = weapon_image[1][1] - b
             if abs(weapon_image[1][1] - y1) < 1:
                 y1 = weapon_image[1][1] - 1
         else:
-            y1 -= a
+            if y1 < target_position[1] + a and y1 > target_position[1] - a:
+                y1 -= a
+            else:
+                y1 -= a
             try:
                 x1 += abs((target_position[0] - x1) / (target_position[1] - y1)) * t
             except:
-                x1 = weapon_image[1][0] + 10
-            if abs(weapon_image[1][0] - x1) > 10:
-                x1 = weapon_image[1][0] + 10
+                x1 = weapon_image[1][0] + b
+            if abs(weapon_image[1][0] - x1) > b:
+                x1 = weapon_image[1][0] + b
             if abs(weapon_image[1][0] - x1) < 1:
                 x1 = weapon_image[1][0] + 1
     weapon_image[1] = (x1 , y1)
@@ -2009,6 +2124,9 @@ def shoot(target_position , weapon_image , hero1 , hero2):
 def show_towers():
     for i in towers_in_game :
         window.blit(i.image[1],(i.position[0]-i.image[1].get_size()[0]/2,i.position[1]-i.image[1].get_size()[1]/2))
+        window.blit(i.weapon_image[0], (
+            i.weapon_image[1][0] - i.weapon_image[0].get_size()[0] / 2,
+            i.weapon_image[1][1] - i.weapon_image[0].get_size()[1] / 2))
         if i.id == 1 :
             pygame.draw.rect(window, (50, 50, 50), (i.position[0] - i.image[0].get_size()[0] /
                                                     2 + 50, i.position[1] - i.image[0].get_size()[1] / 2 ,
@@ -2273,6 +2391,8 @@ while True :
         image_counter+=1
         drop_card()
         if image_counter%100==0 :
+            hooshang()
+        if image_counter%150==0 :
             hoosh()
         fire()
         if image_counter % 100 :
@@ -2308,17 +2428,26 @@ while True :
         show_towers()
         if game_result[0]>game_result[1]:
             window.blit(pygame.image.load('images/Blue_winner.png'),(0,0))
+            window.blit(pygame.image.load('images/red_crown.png'), (635 - 350, 200 + 250))
+            window.blit(pygame.image.load('images/blue_crown.png'), (640 - 350, 250 + 250))
+            font = pygame.font.SysFont("comicsansms", 32)
+            text1 = font.render(str(game_result[0]), True, (0, 0, 255))
+            text2 = font.render(str(game_result[1]), True, (255, 0, 0))
+            window.blit(text1, (620 - 350 - text1.get_width() // 2, 275 + 250 - text1.get_height() // 2))
+            window.blit(text2, (620 - 350 - text2.get_width() // 2, 225 + 250 - text2.get_height() // 2))
+
         elif game_result[1]>game_result[0]:
             window.blit(pygame.image.load('images/Red_winner.png'),(0,0))
+            window.blit(pygame.image.load('images/red_crown.png'), (635 - 350, 200 + 250))
+            window.blit(pygame.image.load('images/blue_crown.png'), (640 - 350, 250 + 250))
+            font = pygame.font.SysFont("comicsansms", 32)
+            text1 = font.render(str(game_result[0]), True, (0, 0, 255))
+            text2 = font.render(str(game_result[1]), True, (255, 0, 0))
+            window.blit(text1, (620 - 350 - text1.get_width() // 2, 275 + 250 - text1.get_height() // 2))
+            window.blit(text2, (620 - 350 - text2.get_width() // 2, 225 + 250 - text2.get_height() // 2))
+
         else:
             window.blit(pygame.image.load('images/Draw.png'),(0,0))
-        window.blit(pygame.image.load('images/red_crown.png'), (635-350, 200+250))
-        window.blit(pygame.image.load('images/blue_crown.png'), (640-350, 250+250))
-        font = pygame.font.SysFont("comicsansms", 32)
-        text1 = font.render(str(game_result[0]), True, (0, 0, 255))
-        text2 = font.render(str(game_result[1]), True, (255, 0, 0))
-        window.blit(text1, (620-350 - text1.get_width() // 2, 275+250 - text1.get_height() // 2))
-        window.blit(text2, (620-350 - text2.get_width() // 2, 225 +250- text2.get_height() // 2))
 
     pygame.display.update()
 
