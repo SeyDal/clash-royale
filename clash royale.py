@@ -18,7 +18,7 @@ class Hero :
 
 class Inferno(Hero):
     def __init__(self,position,id):
-        Hero.__init__(self,50,1500,4,8,True,2,"building",("air","ground","building"),10)
+        Hero.__init__(self,50,1500,4,8,True,5,"building",("air","ground","building"),10)
         self.position=position
         self.id=id
         self.move_image =[pygame.image.load('images/Inferno.png'),pygame.image.load('images/Inferno.png')
@@ -31,7 +31,7 @@ class Inferno(Hero):
 
 class Tesla(Hero):
     def __init__(self,position,id):
-        Hero.__init__(self,55,1500,4,10,True,2,"building",("air","ground","building"),10)
+        Hero.__init__(self,55,1500,4,10,False,4,"building",("air","ground","building"),10)
         self.position=position
         self.id=id
         self.move_image =[pygame.image.load('images/Tesla.png'),pygame.image.load('images/Tesla.png')
@@ -152,7 +152,7 @@ class Building :
 
 class King_tower (Building):
     def __init__(self,position,id,image):
-        Building.__init__(self,6,4500,2,12,"building",('air','ground','building'))
+        Building.__init__(self,6,4500,1,12,"building",('air','ground','building'))
         self.position=position
         self.image=[image,image,image,image]
         self.attack_image=[image,image,image,image]
@@ -213,7 +213,7 @@ def random_select_troop():
 
 
 def drop_card():
-    global card_selected,heros_in_game,elixirs_teem1
+    global card_selected,heros_in_game,elixirs_teem1,last_card,last_card_check
     first_troops()
     if pygame.mouse.get_pressed()[0]==True :
         for i in range(len(trooplist_position)) :
@@ -258,6 +258,8 @@ def drop_card():
                         heros_in_game.append(eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]], 1))
                     attacking_heros_in_game.append(False)
                     target_heros_in_game.append([])
+                    last_card=heros_in_game[-1]
+                    last_card_check=False
                     elixirs_teem1 -= heros_in_game[-1].hero_cost
                     random_select_troop()
                 else:
@@ -275,6 +277,8 @@ def drop_card():
                             eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]], 1))
                     attacking_heros_in_game.append(False)
                     target_heros_in_game.append([])
+                    last_card = heros_in_game[-1]
+                    last_card_check = False
                     elixirs_teem1 -= heros_in_game[-1].hero_cost
                     random_select_troop()
                 else:
@@ -293,6 +297,8 @@ def drop_card():
                             eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]], 1))
                     attacking_heros_in_game.append(False)
                     target_heros_in_game.append([])
+                    last_card = heros_in_game[-1]
+                    last_card_check = False
                     elixirs_teem1 -= heros_in_game[-1].hero_cost
                     random_select_troop()
                 else:
@@ -301,7 +307,7 @@ def drop_card():
                     card_selected[0] = False
             elif towers[0] in destroyed_towers and towers[1] not in destroyed_towers:
                 if trooplist_position[card_selected[1]][1]+trooplist[card_selected[1]].get_size()[1]/2 > red_image.get_size()[1] or \
-                        (trooplist_position[card_selected[1]][0]-trooplist[card_selected[1]].get_size()[0]/2 <= red_image.get_size()[0] and trooplist[card_selected[1]][1]+trooplist_position[card_selected[1]].get_size()[1]/2 > 269 + 25):
+                        (trooplist_position[card_selected[1]][0]-trooplist[card_selected[1]].get_size()[0]/2 <= red_image.get_size()[0] and trooplist_position[card_selected[1]][1]+trooplist[card_selected[1]].get_size()[1]/2 > 269 + 25):
                     card_selected[0] = False
                     if 380 < trooplist_position[card_selected[1]][1] < 460:
                         heros_in_game.append(
@@ -311,6 +317,8 @@ def drop_card():
                             eval(trooplist_name[card_selected[1]])(trooplist_position[card_selected[1]], 1))
                     attacking_heros_in_game.append(False)
                     target_heros_in_game.append([])
+                    last_card = heros_in_game[-1]
+                    last_card_check = False
                     elixirs_teem1 -= heros_in_game[-1].hero_cost
                     random_select_troop()
                 else:
@@ -1660,44 +1668,112 @@ def area_damage():
                     if distance / 20 <= hero1.range :
                         tower.hit_point -= hero1.area_damage
 
-def Hoooosh():
-    global heros_in_use2,attacking_heros_in_game,heros_in_game,target_heros_in_game
-    temp_troop = list(dictroop.keys())
-    tem_troop = []
+def hoosh():
+    global heros_in_use,attacking_heros_in_game,heros_in_game,target_heros_in_game,last_card,last_card_check,elixirs_teem2
     long_range_troops = ["Wizard","Mega_minion"]
-    for i in range(6):
-        card = random.choice(temp_troop)
-        heros_in_use2.append(card)
-        temp_troop.remove(card)
-    print(heros_in_use2)
-    if len(heros_in_game) == 0 :
-        if elixirs_teem2 == 8 :
-            troop = random.choice(long_range_troops)
-            rand_x1 = random.randint(80,100)
-            rand_y = random.randint(100,200)
-            rand_x2 = random.randint(500,520)
-            if troop in heros_in_use2 :
-                heros_in_game.append(eval(troop+str((random.choice([rand_x1,rand_x2]),rand_y))+str(2)))
-                attacking_heros_in_game.append(False)
-                target_heros_in_game.append([])
-            else:
-                long_range_troops.remove(troop)
-                if long_range_troops[0] in heros_in_use2:
-                    heros_in_game.append(eval(long_range_troops[0] + str((random.choice([rand_x1, rand_x2]), rand_y)) + str(2)))
+    enemy_number = 0
+    for i in heros_in_game:
+        if i.id == 1:
+            enemy_number += 1
+
+    rand_x1 = random.randint(80, 130)
+    rand_y = random.randint(200, 300)
+    rand_x2 = random.randint(500, 520)
+    if enemy_number == 0:
+        if len(heros_in_game) != 0:
+            for hero in heros_in_game :
+                if type(hero) in [type(Giant((0,0),2)),type(Balloon((0,0),2)),type(Knight((0,0),2))] :
+                    for hero1 in [Archer((hero.position[0],320),2),Wizard((hero.position[0],320),2),Mega_minion((hero.position[0],320),2)]:
+                        if type(hero1) in heros_in_use2 and hero1.hero_cost <= elixirs_teem2 :
+                            heros_in_game.append(hero1)
+                            attacking_heros_in_game.append(False)
+                            target_heros_in_game.append([])
+                            elixirs_teem2-=hero1.hero_cost
+
+                if type(hero) in [type(Wizard((0,0),2)),type(Archer((0,0),2)),type(Mega_minion((0,0),2))] :
+                    for hero1 in [Giant((hero.position[0],320),2),Balloon((hero.position[0],320),2),Pekka((hero.position[0],320),2),Knight((hero.position[0],320),2)]:
+                        if type(hero1) in heros_in_use2 and hero1.hero_cost <= elixirs_teem2 :
+                            heros_in_game.append(hero1)
+                            attacking_heros_in_game.append(False)
+                            target_heros_in_game.append([])
+                            elixirs_teem2-=hero1.hero_cost
+
+        elif elixirs_teem2==8 :
+            for hero in [Mega_minion((random.choice([rand_x1,rand_x2]),rand_y),2),Archer((random.choice([rand_x1,rand_x2]),rand_y),2)]:
+                if  type(hero) in heros_in_use2 :
+                    heros_in_game.append(hero)
                     attacking_heros_in_game.append(False)
                     target_heros_in_game.append([])
-            for elixir in range(2,5):
-                for card in heros_in_use2 :
-                    if card.hero_cost == elixir :
-                        heros_in_game.append(eval(card + str((random.choice([rand_x1, rand_x2]), rand_y)) + str(2)))
+                    elixirs_teem2 -= hero.hero_cost
+                    break
+
+
+    elif last_card in heros_in_game and  last_card_check == False:
+        if elixirs_teem2 >4 :
+            for i in heros_in_use :
+                hero=eval(i+'((0,0),2)')
+                if hero.type not in last_card.target and last_card.type in hero.target :
+                    if hero.hero_cost <= elixirs_teem2 :
+                        elixirs_teem2-=hero.hero_cost
+                        last_card_check=True
+                        if last_card.position[0]<300 :
+                            heros_in_game.append(eval(i+'('+str((rand_x1,rand_y))+',2)'))
+                            attacking_heros_in_game.append(False)
+                            target_heros_in_game.append([])
+                        else:
+                            heros_in_game.append(eval(i+'('+str((rand_x2,rand_y))+',2)'))
+                            attacking_heros_in_game.append(False)
+                            target_heros_in_game.append([])
+                        return None
+            for i in heros_in_use :
+                hero=eval(i+'((0,0),2)')
+                if last_card.target==("building") :
+                    if hero.type=="building" :
+                        elixirs_teem2 -= hero.hero_cost
+                        last_card_check = True
+                        if last_card.position[0] < 300:
+                            heros_in_game.append(eval(i +'('+ str((rand_x1, rand_y))+',2)'))
+                            attacking_heros_in_game.append(False)
+                            target_heros_in_game.append([])
+                        else:
+                            heros_in_game.append(eval(i +'('+ str((rand_x2, rand_y))+',2)'))
+                            attacking_heros_in_game.append(False)
+                            target_heros_in_game.append([])
+                        return None
+                elif type(last_card)==type(hero) :
+                    elixirs_teem2 -= hero.hero_cost
+                    last_card_check = True
+                    if last_card.position[0] < 300:
+                        heros_in_game.append(eval(i + '(' + str((rand_x1, rand_y)) + ',2)'))
                         attacking_heros_in_game.append(False)
                         target_heros_in_game.append([])
+                    else:
+                        heros_in_game.append(eval(i + '(' + str((rand_x2, rand_y)) + ',2)'))
+                        attacking_heros_in_game.append(False)
+                        target_heros_in_game.append([])
+                    return None
+                elif last_card.target==("building") :
+                    elixirs_teem2 -= hero.hero_cost
+                    last_card_check = True
+                    if last_card.position[0] < 300:
+                        heros_in_game.append(eval(i +'('+ str((rand_x1, rand_y))+',2)'))
+                        attacking_heros_in_game.append(False)
+                        target_heros_in_game.append([])
+                    else:
+                        heros_in_game.append(eval(i +'('+ str((rand_x2, rand_y))+',2)'))
+                        attacking_heros_in_game.append(False)
+                        target_heros_in_game.append([])
+                    return None
+
+
+
+
 
 
 def InTesla () :
     for tower in heros_in_game :
         if tower.type == "building" :
-            tower.hit_point -= 2
+            tower.hit_point -= 1
 
 def shoot2(target_position , weapon_image , tower , hero):
     if target_position[0] - 15 < weapon_image[1][0]  and target_position[0] +15 > weapon_image[1][0] :
@@ -1708,8 +1784,8 @@ def shoot2(target_position , weapon_image , tower , hero):
     print(hero)
     x1 = weapon_image[1][0]
     y1 = weapon_image[1][1]
-    a = 5
-    t = 10
+    a = 10
+    t = 20
     if x1 > target_position[0]:
         if y1 > target_position[1]:
             if abs(weapon_image[1][0] - x1) < abs(target_position[1] - y1):
@@ -2103,6 +2179,8 @@ knight_card=pygame.image.load('images/KnightCard.png')
 pekka_card=pygame.image.load('images/MiniPEKKACard.png')
 mega_minion_card=pygame.image.load('images/MegaMinionCard.png')
 #variables
+last_card=None
+last_card_check=False
 card_selected1=[False,0]
 start_game=False
 end_game=False
@@ -2115,10 +2193,20 @@ elixirs_teem2=3
 dictroop1 = {"Archer" :archer_card  , "Wizard" : wizard_card , "Giant" : giant_card
     , "Knight" : knight_card , "Mega_minion" : mega_minion_card , "Pekka" : pekka_card , "Balloon" : balloon_card , "Inferno" : Inferno_card , "Tesla" : Tesla_card}
 dictroop={}
+temp_troop = list(dictroop1.keys())
+heros_in_use=[]
+heros_in_use2=[]
+for i in range(6):
+    card = random.choice(temp_troop)
+    heros_in_use.append(card)
+    temp_troop.remove(card)
+for i in heros_in_use :
+    heros_in_use2.append(type(eval(i+'((0,0),2)')))
+
 card_selected=[False,0]
-heros_in_game=[Tesla((450,300),2),Inferno((500,200),2)]
-attacking_heros_in_game=[False,False]
-target_heros_in_game=[[],[]]
+heros_in_game=[]
+attacking_heros_in_game=[]
+target_heros_in_game=[]
 towers_in_game=[Princess_tower((10+75,20+75),2,pygame.image.load('images\Queen_tower_up.png')),Princess_tower((430+75,20+75),2,pygame.image.load('images\Queen_tower_up.png')),
                 Princess_tower((10+75, 650+75), 1, pygame.image.load('images\Queen_tower_down.png')),Princess_tower((430+75,650+75),1,pygame.image.load('images\Queen_tower_down.png')),
                 King_tower((225+75,0+75),2,pygame.image.load('images\King_tower_up.png')),King_tower((225+75,650+75),1,pygame.image.load('images\King_tower_down.png'))]
@@ -2184,8 +2272,10 @@ while True :
         show_forbidden_area()
         image_counter+=1
         drop_card()
+        if image_counter%100==0 :
+            hoosh()
         fire()
-        if image_counter % 50 :
+        if image_counter % 100 :
             InTesla()
         move()
         move_up()
@@ -2195,7 +2285,6 @@ while True :
         show_elixir()
         show_crowns()
         game_controler()
-
     elif end_game==True:
         draw_map()
         if game_result[0]>game_result[1]:
